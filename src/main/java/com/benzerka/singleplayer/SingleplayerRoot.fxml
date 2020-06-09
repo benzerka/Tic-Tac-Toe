@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.benzerka.gui.components.tile.Tile?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<fx:root gridLinesVisible="true" type="GridPane" xmlns="http://javafx.com/javafx/8.0.121"
+         xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.benzerka.singleplayer.SingleplayerController">
+    <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+        <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
+    </rowConstraints>
+    <children>
+        <GridPane alignment="CENTER" gridLinesVisible="true" prefHeight="400.0" prefWidth="600.0" GridPane.rowIndex="1">
+            <rowConstraints>
+                <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="110.0" valignment="CENTER"
+                                vgrow="SOMETIMES"/>
+                <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="110.0" valignment="CENTER"
+                                vgrow="SOMETIMES"/>
+                <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="110.0" valignment="CENTER"
+                                vgrow="SOMETIMES"/>
+            </rowConstraints>
+            <columnConstraints>
+                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity"
+                                   prefWidth="110.0"/>
+                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity"
+                                   prefWidth="110.0"/>
+                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity"
+                                   prefWidth="110.0"/>
+            </columnConstraints>
+            <children>
+                <Tile fx:id="tile1" tileCircleColor="aqua" tileCrossColor="#2bcf19">
+                    <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                    </padding>
+                </Tile>
+                <Tile fx:id="tile2" layoutX="10.0" layoutY="10.0" tileCircleColor="aqua" tileCrossColor="#2bcf19"
+                      GridPane.columnIndex="1">
+                    <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                    </padding>
+                </Tile>
+                <Tile fx:id="tile3" layoutX="10.0" layoutY="10.0" tileCircleColor="aqua" tileCrossColor="#2bcf19"
+                      GridPane.columnIndex="2">
+                    <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                    </padding>
+                </Tile>
+                <Tile fx:id="tile4" layoutX="10.0" layoutY="10.0" tileCircleColor="aqua" tileCrossColor="#2bcf19"
+                      GridPane.rowIndex="1">
+                    <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                    </padding>
+                </Tile>
+                <Tile fx:id="tile5" layoutX="210.0" layoutY="10.0" tileCircleColor="aqua" tileCrossColor="#2bcf19"
+                      GridPane.columnIndex="1" GridPane.rowIndex="1">
+                    <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                    </padding>
+                </Tile>
+                <Tile fx:id="tile6" layoutX="10.0" layoutY="144.0" tileCircleColor="aqua" tileCrossColor="#2bcf19"
+                      GridPane.columnIndex="2" GridPane.rowIndex="1">
+                    <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                    </padding>
+                </Tile>
+                <Tile fx:id="tile7" layoutX="410.0" layoutY="144.0" tileCircleColor="aqua" tileCrossColor="#2bcf19"
+                      GridPane.rowIndex="2">
+                    <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                    </padding>
+                </Tile>
+                <Tile fx:id="tile8" layoutX="10.0" layoutY="10.0" tileCircleColor="aqua" tileCrossColor="#2bcf19"
+                      GridPane.columnIndex="1" GridPane.rowIndex="2">
+                    <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                    </padding>
+                </Tile>
+                <Tile fx:id="tile9" layoutX="10.0" layoutY="277.0" tileCircleColor="aqua" tileCrossColor="#2bcf19"
+                      GridPane.columnIndex="2" GridPane.rowIndex="2">
+                    <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                    </padding>
+                </Tile>
+            </children>
+        </GridPane>
+        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="60.0">
+            <children>
+                <Label fx:id="player" text="Player">
+                    <graphic>
+                        <Label text="Turn:"/>
+                    </graphic>
+                </Label>
+                <Label fx:id="errorLabel" minWidth="150.0" textFill="#ff0909"/>
+            </children>
+        </HBox>
+    </children>
+</fx:root>
