@@ -1,7 +1,7 @@
 package com.benzerka.gui.components.tile;
 
 import com.benzerka.logic.GameLogic;
-import com.benzerka.singleplayer.SingleplayerController;
+import com.benzerka.logic.TileState;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.input.MouseEvent;
@@ -33,10 +33,11 @@ public class TileController implements Initializable {
     private Pane circlePane;
 
     private Tile currentTile;
+    private GameLogic gameLogic;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        this.gameLogic = GameLogic.getInstance();
     }
 
     public Pane getEmptyPane() {
@@ -91,44 +92,24 @@ public class TileController implements Initializable {
         this.currentTile = currentTile;
     }
 
-    public void switchPane(MouseEvent mouseEvent) {
-        // If current player is player one:
-        if (GameLogic.getPlayerOne()) {
-            applyChanges(true);
-        } else {
-            applyChanges(false);
-        }
+    public void onClick(MouseEvent mouseEvent) {
+        applyChanges(gameLogic.getCurrentPlayer());
     }
 
-    private void applyChanges(boolean playerOne) {
-        // get current Tile id
-        String tileIndex = currentTile.getId();
+    private void applyChanges(TileState currentTileState) {
+        if (currentTile.getTileState() == TileState.EMPTY) {
+            gameLogic.clearError();
+            currentTile.setTileState(currentTileState);
 
-        // disable the possibility to change already existing tile in a TreeMap
-        // if TreeMap contains current tile's id
-        if (GameLogic.getTablica().keySet().contains(tileIndex)) {
-            // tell the user that he cannot override already existing tile.
-            SingleplayerController.getErrorLabel().setText("This tile is occupied.");
-        } else {
-            // clear error Label
-            SingleplayerController.getErrorLabel().setText("");
-            // Player's turn: show either circle or cross on a tile.
             emptyPane.setVisible(false);
-            crossPane.setVisible(!playerOne);
-            circlePane.setVisible(playerOne);
+            crossPane.setVisible(currentTileState == TileState.CROSS);
+            circlePane.setVisible(currentTileState == TileState.CIRCLE);
 
-            // add current tile's id (position on a map) with current player's turn as a value into TreeMap
-            GameLogic.addItem(tileIndex, GameLogic.selectPlayer());
+            gameLogic.switchTurn();
 
-            // set the turn to the other player.
-            GameLogic.changePlayerTurn(!playerOne);
-
-            // display updated player's turn in a label.
-            SingleplayerController.getPlayer().setText(GameLogic.selectPlayer());
-
-            // check winning condition? not sure if it should be here or somewhere else
-            GameLogic.checkWinningCondition();
-            // inside winning condition draw a line corresponding to the line that won, draw more if there are more winning conditions
+            gameLogic.checkWinningCondition();
+        } else {
+            gameLogic.setError("This tile is occupied.");
         }
     }
 }

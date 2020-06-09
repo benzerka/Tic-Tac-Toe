@@ -1,5 +1,7 @@
 package com.benzerka.gui.components.tile;
 
+import com.benzerka.logic.GameLogic;
+import com.benzerka.logic.TileState;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXMLLoader;
@@ -13,33 +15,47 @@ import java.io.IOException;
 
 public class Tile extends GridPane {
     TileController tileController;
-    ObjectProperty<Paint> tileCrossColor = new SimpleObjectProperty<>(Color.RED);
-    ObjectProperty<Paint> tileCircleColor = new SimpleObjectProperty<>(Color.BLUE);
+    private int row;
+    private int column;
 
+    private TileState tileState;
+
+    ObjectProperty<Paint> tileCrossColor = new SimpleObjectProperty<>(Color.RED);
+
+    ObjectProperty<Paint> tileCircleColor = new SimpleObjectProperty<>(Color.BLUE);
     public final Paint getTileCrossColor() {
         return tileCrossColor.get();
     }
     public ObjectProperty<Paint> tileCrossColorProperty() {
         return tileCrossColor;
     }
+
     public final void setTileCrossColor(Paint tileCrossColor) {
         this.tileCrossColor.set(tileCrossColor);
     }
-
     public Paint getTileCircleColor() {
         return tileCircleColor.get();
     }
     public ObjectProperty<Paint> tileCircleColorProperty() {
         return tileCircleColor;
     }
+
     public void setTileCircleColor(Paint tileCircleColor) {
         this.tileCircleColor.set(tileCircleColor);
     }
-
-
     private Pane emptyPane;
+
     private Pane crossPane;
+
     private Pane circlePane;
+    public TileState getTileState() {
+        return tileState;
+    }
+
+    public void setTileState(TileState tileState) {
+        this.tileState = tileState;
+        GameLogic.getInstance().setTile(row, column, tileState);
+    }
 
     public Pane getEmptyPane() {
         return emptyPane;
@@ -52,8 +68,11 @@ public class Tile extends GridPane {
     }
 
 
-    public Tile() {
+    public Tile(TileState tileState, int row, int column) {
         super();
+        this.tileState = tileState;
+        this.row = row;
+        this.column = column;
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("TileRoot.fxml"));

@@ -1,112 +1,105 @@
 package com.benzerka.logic;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
+import java.util.Objects;
 
 public class GameLogic {
-    private static TreeMap<String, String> tablica = new TreeMap<>();
-    private static Boolean playerOne = true;
-    private static byte sizeOfX;
-    private static byte sizeOfY;
-    private static byte amountOfElements;
+    private static GameLogic INSTANCE;
+    private TileState[][] gameBoard;
 
-    public static void addItem(String tile, String player) {
-        tablica.put(tile, player);
+    private final int boardSize;
+    private final int winningConditionSize;
+    private ObjectProperty<TileState> currentPlayerProperty;
+    private StringProperty errorProperty;
+
+    private GameLogic(int boardSize, int winningConditionSize) {
+        gameBoard = new TileState[boardSize][boardSize];
+        currentPlayerProperty = new SimpleObjectProperty<>(TileState.CIRCLE);
+        errorProperty = new SimpleStringProperty("");
+        this.boardSize = boardSize;
+        this.winningConditionSize = winningConditionSize;
+        clearGameBoard();
     }
 
-    public static String selectPlayer() {
-        if (playerOne) {
-            return "Player 1";
+    public static GameLogic getInstance() {
+        return getInstance(3, 3);
+    }
+
+    public static GameLogic getInstance(int boardSize, int winningConditionSize) {
+        if (Objects.isNull(INSTANCE)) {
+            INSTANCE = new GameLogic(boardSize, winningConditionSize);
+        }
+        return INSTANCE;
+    }
+
+    private void clearGameBoard() {
+        for (int i = 0; i < boardSize; i++) {
+            for (int j = 0; j < boardSize; j++) {
+                gameBoard[i][j] = TileState.EMPTY;
+            }
+        }
+    }
+
+    public void checkWinningCondition() {
+        for(int i = 0; i<boardSize; i++) {
+            int crossesAmount = 0;
+            int circlesAmount = 0;
+            for(int j =0; j<boardSize; j++) {
+                if(gameBoard[i][j] == TileState.CROSS) {
+                    crossesAmount++;
+                } else if(gameBoard[i][j] == TileState.CIRCLE) {
+                    circlesAmount++;
+                }
+            }
+            if(crossesAmount == winningConditionSize) {
+                errorProperty.set("CROSS won");
+            } else if(circlesAmount == winningConditionSize) {
+                errorProperty.set("CIRCLE won");
+            }
+        }
+    }
+
+    public void switchTurn() {
+        if (currentPlayerProperty.get() == TileState.CROSS) {
+            currentPlayerProperty.set(TileState.CIRCLE);
         } else {
-            return "Player 2";
+            currentPlayerProperty.set(TileState.CROSS);
         }
     }
 
-    public static Boolean getPlayerOne() {
-        return playerOne;
+    public TileState[][] getGameBoard() {
+        return gameBoard;
     }
 
-    public static void changePlayerTurn(Boolean playerOne) {
-        GameLogic.playerOne = playerOne;
+    public int getBoardSize() {
+        return boardSize;
     }
 
-    public static TreeMap<String, String> getTablica() {
-        return tablica;
+    public TileState getCurrentPlayer() {
+        return currentPlayerProperty.get();
     }
 
-    private static boolean isWinningCondition() {
-        return false;
+    public ObjectProperty<TileState> getCurrentPlayerProperty() {
+        return currentPlayerProperty;
     }
 
-    public static void checkWinningCondition() {
-
-//        for (Map.Entry<String, String> entry : tablica.entrySet()) {
-//            String key = entry.getKey();
-//            String value = entry.getValue();
-//
-//        }
-
-        // iterate through all possible conditions
-        // left to right, all rows
-        // up to down, all rows
-        // diagonal upper left corner to down right corner - with custom matrix it should also change the rows from left to right, down to up?
-        // diagonal upper right corner to down left corner - ^^^
-
-        // IT HAS TO RUN ONLY ONCE, IN INITIALIZE!!!
-        // possible winning conditions tiles from left to right separated with row index
-        Map<Byte, TreeSet<String>> allRowPossibilities = new HashMap<>();
-        for (byte i = 0; i < sizeOfY; i++) {
-            TreeSet<String> values = new TreeSet<>();
-            for (int j = 0; j < sizeOfX; j++) {
-                String tile = "tile" + (j + 1);
-                values.add(tile);
-            }
-            allRowPossibilities.put(i, values);
-        }
-
-        // possible winning conditions from up to down separated with column index
-        Map<Byte, TreeSet<String>> allColumnPossibilities = new HashMap<>();
-        for (byte i = 0; i < sizeOfX; i++) {
-            TreeSet<String> values = new TreeSet<>();
-            for (byte j = i; j < (sizeOfX * sizeOfY); j = (byte) (j + sizeOfX)) {
-                String tile = "tile" + (j + 1);
-                values.add(tile);
-            }
-            allColumnPossibilities.put(i, values);
-        }
-
-        // possible winning diagonal conditions
-
-
-        handleTie();
+    public StringProperty getErrorProperty() {
+        return errorProperty;
     }
 
-    private static void drawWinningLine() {
-
+    public void clearError() {
+        errorProperty.set("");
     }
 
-    public static void handleTie() {
-        // check if it has exactly size x size elements in HashMap
-        if (tablica.keySet().size() == (sizeOfX * sizeOfY)) {
-            // check if there is no win condition
-            //if (!isWinningCondition()) {
-            System.out.println("most likely a tie");
-            // if we have a tie, display it in a label? or pop up a new window saying that you or someone else has won, click ok to clear the stage or go back to menu
-            //}
-        }
+    public void setError(String error) {
+        errorProperty.set(error);
     }
 
-    public static void setAmountOfElements(byte elements) {
-        GameLogic.amountOfElements = elements;
-    }
-
-    public static void setXSize(byte size) {
-        GameLogic.sizeOfX = size;
-    }
-
-    public static void setYSize(byte size) {
-        GameLogic.sizeOfY = size;
+    public void setTile(int row, int column, TileState tileState) {
+        gameBoard[row][column] = tileState;
     }
 }
