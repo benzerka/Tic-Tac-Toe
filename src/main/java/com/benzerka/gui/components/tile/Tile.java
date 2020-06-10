@@ -1,6 +1,5 @@
 package com.benzerka.gui.components.tile;
 
-import com.benzerka.logic.GameLogic;
 import com.benzerka.logic.TileState;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -15,64 +14,17 @@ import java.io.IOException;
 
 public class Tile extends GridPane {
     TileController tileController;
-    private int row;
-    private int column;
-
-    private TileState tileState;
-
-    ObjectProperty<Paint> tileCrossColor = new SimpleObjectProperty<>(Color.RED);
-
-    ObjectProperty<Paint> tileCircleColor = new SimpleObjectProperty<>(Color.BLUE);
-    public final Paint getTileCrossColor() {
-        return tileCrossColor.get();
-    }
-    public ObjectProperty<Paint> tileCrossColorProperty() {
-        return tileCrossColor;
-    }
-
-    public final void setTileCrossColor(Paint tileCrossColor) {
-        this.tileCrossColor.set(tileCrossColor);
-    }
-    public Paint getTileCircleColor() {
-        return tileCircleColor.get();
-    }
-    public ObjectProperty<Paint> tileCircleColorProperty() {
-        return tileCircleColor;
-    }
-
-    public void setTileCircleColor(Paint tileCircleColor) {
-        this.tileCircleColor.set(tileCircleColor);
-    }
+    private ObjectProperty<TileState> tileState;
     private Pane emptyPane;
-
     private Pane crossPane;
-
     private Pane circlePane;
-    public TileState getTileState() {
-        return tileState;
-    }
+    ObjectProperty<Paint> tileCrossColor = new SimpleObjectProperty<>(Color.RED);
+    ObjectProperty<Paint> tileCircleColor = new SimpleObjectProperty<>(Color.BLUE);
 
-    public void setTileState(TileState tileState) {
-        this.tileState = tileState;
-        GameLogic.getInstance().setTile(row, column, tileState);
-    }
-
-    public Pane getEmptyPane() {
-        return emptyPane;
-    }
-    public Pane getCrossPane() {
-        return crossPane;
-    }
-    public Pane getCirclePane() {
-        return circlePane;
-    }
-
-
-    public Tile(TileState tileState, int row, int column) {
+    public Tile(ObjectProperty<TileState> tileState) {
         super();
-        this.tileState = tileState;
-        this.row = row;
-        this.column = column;
+        this.tileState = new SimpleObjectProperty<>();
+        this.tileState.bindBidirectional(tileState);
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("TileRoot.fxml"));
@@ -90,5 +42,45 @@ public class Tile extends GridPane {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public final Paint getTileCrossColor() {
+        return tileCrossColor.get();
+    }
+
+    public ObjectProperty<Paint> tileCrossColorProperty() {
+        return tileCrossColor;
+    }
+
+    public final void setTileCrossColor(Paint tileCrossColor) {
+        this.tileCrossColor.set(tileCrossColor);
+    }
+    public Paint getTileCircleColor() {
+        return tileCircleColor.get();
+    }
+
+    public ObjectProperty<Paint> tileCircleColorProperty() {
+        return tileCircleColor;
+    }
+    public void setTileCircleColor(Paint tileCircleColor) {
+        this.tileCircleColor.set(tileCircleColor);
+    }
+
+    public TileState getTileState() {
+        return tileState.get();
+    }
+
+    public void setTileState(TileState tileState) {
+        this.tileState.set(tileState);
+    }
+
+    public Pane getEmptyPane() {
+        return emptyPane;
+    }
+    public Pane getCrossPane() {
+        return crossPane;
+    }
+    public Pane getCirclePane() {
+        return circlePane;
     }
 }

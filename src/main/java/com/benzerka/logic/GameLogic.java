@@ -9,15 +9,16 @@ import java.util.Objects;
 
 public class GameLogic {
     private static GameLogic INSTANCE;
-    private TileState[][] gameBoard;
+    private ObjectProperty<TileState>[][] gameBoard;
 
     private final int boardSize;
     private final int winningConditionSize;
     private ObjectProperty<TileState> currentPlayerProperty;
     private StringProperty errorProperty;
 
+    @SuppressWarnings("unchecked")
     private GameLogic(int boardSize, int winningConditionSize) {
-        gameBoard = new TileState[boardSize][boardSize];
+        gameBoard = new SimpleObjectProperty[boardSize][boardSize];
         currentPlayerProperty = new SimpleObjectProperty<>(TileState.CIRCLE);
         errorProperty = new SimpleStringProperty("");
         this.boardSize = boardSize;
@@ -39,7 +40,7 @@ public class GameLogic {
     private void clearGameBoard() {
         for (int i = 0; i < boardSize; i++) {
             for (int j = 0; j < boardSize; j++) {
-                gameBoard[i][j] = TileState.EMPTY;
+                gameBoard[i][j] = new SimpleObjectProperty<>(TileState.EMPTY);
             }
         }
     }
@@ -49,9 +50,9 @@ public class GameLogic {
             int crossesAmount = 0;
             int circlesAmount = 0;
             for(int j =0; j<boardSize; j++) {
-                if(gameBoard[i][j] == TileState.CROSS) {
+                if(gameBoard[i][j].get() == TileState.CROSS) {
                     crossesAmount++;
-                } else if(gameBoard[i][j] == TileState.CIRCLE) {
+                } else if(gameBoard[i][j].get() == TileState.CIRCLE) {
                     circlesAmount++;
                 }
             }
@@ -71,7 +72,7 @@ public class GameLogic {
         }
     }
 
-    public TileState[][] getGameBoard() {
+    public ObjectProperty<TileState>[][] getGameBoard() {
         return gameBoard;
     }
 
@@ -97,9 +98,5 @@ public class GameLogic {
 
     public void setError(String error) {
         errorProperty.set(error);
-    }
-
-    public void setTile(int row, int column, TileState tileState) {
-        gameBoard[row][column] = tileState;
     }
 }

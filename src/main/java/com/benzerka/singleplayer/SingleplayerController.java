@@ -3,6 +3,7 @@ package com.benzerka.singleplayer;
 import com.benzerka.gui.components.tile.Tile;
 import com.benzerka.logic.GameLogic;
 import com.benzerka.logic.TileState;
+import javafx.beans.property.ObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -31,10 +32,10 @@ public class SingleplayerController implements Initializable {
         createTiles(gameLogic.getGameBoard(), gameLogic.getBoardSize());
     }
 
-    private void createTiles(TileState[][] gameBoard, int boardSize) {
+    private void createTiles(ObjectProperty<TileState>[][] gameBoard, int boardSize) {
         for(int i = 0; i<boardSize; i++) {
             for(int j = 0; j<boardSize; j++) {
-                this.gameBoard.add(new Tile(gameBoard[i][j], i, j), j, i);
+                this.gameBoard.add(new Tile(gameBoard[i][j]), j, i);
             }
         }
     }
