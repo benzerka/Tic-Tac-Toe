@@ -26,16 +26,18 @@ public class SingleplayerController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        gameLogic = GameLogic.getInstance();
+        gameLogic = GameLogic.getInstance(5, 5, 3);
         player.textProperty().bind(gameLogic.getCurrentPlayerProperty().asString());
         errorLabel.textProperty().bind(gameLogic.getErrorProperty());
-        createTiles(gameLogic.getGameBoard(), gameLogic.getBoardSize());
+        createTiles(gameLogic.getGameBoard(), gameLogic.getBoardXSize(), gameLogic.getBoardYSize());
     }
 
-    private void createTiles(ObjectProperty<TileState>[][] gameBoard, int boardSize) {
-        for(int i = 0; i<boardSize; i++) {
-            for(int j = 0; j<boardSize; j++) {
-                this.gameBoard.add(new Tile(gameBoard[i][j]), j, i);
+    private void createTiles(ObjectProperty<TileState>[][] gameBoard, int boardXSize, int boardYSize) {
+        for (int i = 0; i < boardYSize; i++) {
+            for (int j = 0; j < boardXSize; j++) {
+                Tile tile = new Tile(gameBoard[i][j]);
+                tile.sendPosition(j, i);
+                this.gameBoard.add(tile, j, i);
             }
         }
     }

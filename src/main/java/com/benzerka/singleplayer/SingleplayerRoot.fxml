@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.benzerka.gui.components.tile.Tile?>
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -18,7 +16,8 @@
         <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
     </rowConstraints>
     <children>
-        <GridPane alignment="CENTER" gridLinesVisible="true" prefHeight="400.0" prefWidth="600.0" GridPane.rowIndex="1" fx:id="gameBoard">
+        <GridPane alignment="CENTER" gridLinesVisible="true" prefHeight="400.0" prefWidth="600.0" GridPane.rowIndex="1"
+                  fx:id="gameBoard">
             <rowConstraints>
                 <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="110.0" valignment="CENTER"
                                 vgrow="SOMETIMES"/>

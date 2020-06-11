@@ -33,11 +33,16 @@ public class TileController implements Initializable {
     private Pane circlePane;
 
     private Tile currentTile;
+
     private GameLogic gameLogic;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.gameLogic = GameLogic.getInstance();
+    }
+
+    public GameLogic getGameLogic() {
+        return gameLogic;
     }
 
     public Pane getEmptyPane() {
@@ -100,14 +105,7 @@ public class TileController implements Initializable {
         if (currentTile.getTileState() == TileState.EMPTY) {
             gameLogic.clearError();
             currentTile.setTileState(currentTileState);
-
-            emptyPane.setVisible(false);
-            crossPane.setVisible(currentTileState == TileState.CROSS);
-            circlePane.setVisible(currentTileState == TileState.CIRCLE);
-
             gameLogic.switchTurn();
-
-            gameLogic.checkWinningCondition();
         } else {
             gameLogic.setError("This tile is occupied.");
         }

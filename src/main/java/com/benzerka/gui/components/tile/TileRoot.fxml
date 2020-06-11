@@ -16,21 +16,21 @@
         <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
     </rowConstraints>
     <children>
-        <Pane fx:id="crossPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+        <Pane fx:id="crossPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0"
               prefHeight="100.0" prefWidth="100.0" visible="false">
             <children>
                 <Line fx:id="line1" endX="100.0" startY="100.0" stroke="#ff1100" strokeWidth="3.0"/>
                 <Line fx:id="line2" endX="100.0" endY="100.0" stroke="#ff1100" strokeWidth="3.0"/>
             </children>
         </Pane>
-        <Pane fx:id="circlePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+        <Pane fx:id="circlePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0"
               prefHeight="100.0" prefWidth="100.0" visible="false">
             <children>
                 <Circle fx:id="circle" centerX="50.0" centerY="50.0" fill="TRANSPARENT" radius="50.0" stroke="#0026ff"
                         strokeType="INSIDE" strokeWidth="3.0"/>
             </children>
         </Pane>
-        <Pane fx:id="emptyPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+        <Pane fx:id="emptyPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0"
               prefHeight="100.0" prefWidth="100.0"/>
     </children>
 </GridPane>
