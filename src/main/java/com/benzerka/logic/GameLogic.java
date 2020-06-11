@@ -1,112 +1,196 @@
 package com.benzerka.logic;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
+import java.util.Objects;
 
 public class GameLogic {
-    private static TreeMap<String, String> tablica = new TreeMap<>();
-    private static Boolean playerOne = true;
-    private static byte sizeOfX;
-    private static byte sizeOfY;
-    private static byte amountOfElements;
+    private static GameLogic INSTANCE;
+    private ObjectProperty<TileState>[][] gameBoard;
 
-    public static void addItem(String tile, String player) {
-        tablica.put(tile, player);
+    private final int boardXSize;
+    private final int boardYSize;
+    private final int winningConditionSize;
+    private ObjectProperty<TileState> currentPlayerProperty;
+    private StringProperty errorProperty;
+
+    @SuppressWarnings("unchecked")
+    private GameLogic(int boardXSize, int boardYSize, int winningConditionSize) {
+        gameBoard = new SimpleObjectProperty[boardYSize][boardXSize];
+        currentPlayerProperty = new SimpleObjectProperty<>(TileState.CIRCLE);
+        errorProperty = new SimpleStringProperty("");
+        this.boardXSize = boardXSize;
+        this.boardYSize = boardYSize;
+        this.winningConditionSize = winningConditionSize;
+        clearGameBoard();
     }
 
-    public static String selectPlayer() {
-        if (playerOne) {
-            return "Player 1";
+    public static GameLogic getInstance() {
+        return getInstance(3, 3, 3);
+    }
+
+    public static GameLogic getInstance(int boardXSize, int boardYSize, int winningConditionSize) {
+        if (Objects.isNull(INSTANCE)) {
+            INSTANCE = new GameLogic(boardXSize, boardYSize, winningConditionSize);
+        }
+        return INSTANCE;
+    }
+
+    private void clearGameBoard() {
+        for (int i = 0; i < boardYSize; i++) {
+            for (int j = 0; j < boardXSize; j++) {
+                gameBoard[i][j] = new SimpleObjectProperty<>(TileState.EMPTY);
+            }
+        }
+    }
+
+    public void checkWinningCondition(TileState type, int x, int y) {
+        int totalLeftRightElements = 1 + checkLeftTiles(type, x, y) + checkRightTiles(type, x, y);
+        int totalAboveDownElements = 1 + checkTilesAbove(type, x, y) + checkTilesBelow(type, x, y);
+        int totalUpperLeftDownRightDiagonalElements = 1 + checkUpperLeftDiagonalTiles(type, x, y) + checkDownRightDiagonalTiles(type, x, y);
+        int totalUpperRightDownLeftDiagonalElements = 1 + checkUpperRightDiagonalTiles(type, x, y) + checkDownLeftDiagonalTiles(type, x, y);
+        if (totalLeftRightElements == winningConditionSize ||
+                totalAboveDownElements == winningConditionSize ||
+                totalUpperLeftDownRightDiagonalElements == winningConditionSize ||
+                totalUpperRightDownLeftDiagonalElements == winningConditionSize) {
+            handleWinCondition(type);
+        }
+    }
+
+    private void handleWinCondition(TileState type) {
+        System.out.print("Wygrały: " + type);
+    }
+
+    private int checkLeftTiles(TileState type, int x, int y) {
+        // exit condition out of recursive function, prevents going out of bounds.
+        if (x == 0) {
+            return 0;
+        }
+        // check if there are any elements of the same type on the left side of current element position
+        if (gameBoard[y][x - 1].get() == type) {
+            return 1 + checkLeftTiles(type, x - 1, y);
         } else {
-            return "Player 2";
+            return 0;
         }
     }
 
-    public static Boolean getPlayerOne() {
-        return playerOne;
-    }
-
-    public static void changePlayerTurn(Boolean playerOne) {
-        GameLogic.playerOne = playerOne;
-    }
-
-    public static TreeMap<String, String> getTablica() {
-        return tablica;
-    }
-
-    private static boolean isWinningCondition() {
-        return false;
-    }
-
-    public static void checkWinningCondition() {
-
-//        for (Map.Entry<String, String> entry : tablica.entrySet()) {
-//            String key = entry.getKey();
-//            String value = entry.getValue();
-//
-//        }
-
-        // iterate through all possible conditions
-        // left to right, all rows
-        // up to down, all rows
-        // diagonal upper left corner to down right corner - with custom matrix it should also change the rows from left to right, down to up?
-        // diagonal upper right corner to down left corner - ^^^
-
-        // IT HAS TO RUN ONLY ONCE, IN INITIALIZE!!!
-        // possible winning conditions tiles from left to right separated with row index
-        Map<Byte, TreeSet<String>> allRowPossibilities = new HashMap<>();
-        for (byte i = 0; i < sizeOfY; i++) {
-            TreeSet<String> values = new TreeSet<>();
-            for (int j = 0; j < sizeOfX; j++) {
-                String tile = "tile" + (j + 1);
-                values.add(tile);
-            }
-            allRowPossibilities.put(i, values);
+    private int checkRightTiles(TileState type, int x, int y) {
+        if (x == gameBoard[0].length - 1) {
+            return 0;
         }
-
-        // possible winning conditions from up to down separated with column index
-        Map<Byte, TreeSet<String>> allColumnPossibilities = new HashMap<>();
-        for (byte i = 0; i < sizeOfX; i++) {
-            TreeSet<String> values = new TreeSet<>();
-            for (byte j = i; j < (sizeOfX * sizeOfY); j = (byte) (j + sizeOfX)) {
-                String tile = "tile" + (j + 1);
-                values.add(tile);
-            }
-            allColumnPossibilities.put(i, values);
-        }
-
-        // possible winning diagonal conditions
-
-
-        handleTie();
-    }
-
-    private static void drawWinningLine() {
-
-    }
-
-    public static void handleTie() {
-        // check if it has exactly size x size elements in HashMap
-        if (tablica.keySet().size() == (sizeOfX * sizeOfY)) {
-            // check if there is no win condition
-            //if (!isWinningCondition()) {
-            System.out.println("most likely a tie");
-            // if we have a tie, display it in a label? or pop up a new window saying that you or someone else has won, click ok to clear the stage or go back to menu
-            //}
+        if (gameBoard[y][x + 1].get() == type) {
+            return 1 + checkRightTiles(type, x + 1, y);
+        } else {
+            return 0;
         }
     }
 
-    public static void setAmountOfElements(byte elements) {
-        GameLogic.amountOfElements = elements;
+    private int checkTilesAbove(TileState type, int x, int y) {
+        if (y == 0) {
+            return 0;
+        }
+        if (gameBoard[y - 1][x].get() == type) {
+            return 1 + checkTilesAbove(type, x, y - 1);
+        } else {
+            return 0;
+        }
     }
 
-    public static void setXSize(byte size) {
-        GameLogic.sizeOfX = size;
+    private int checkTilesBelow(TileState type, int x, int y) {
+        if (y == gameBoard.length - 1) {
+            return 0;
+        }
+        if (gameBoard[y + 1][x].get() == type) {
+            return 1 + checkTilesBelow(type, x, y + 1);
+        } else {
+            return 0;
+        }
     }
 
-    public static void setYSize(byte size) {
-        GameLogic.sizeOfY = size;
+    private int checkUpperLeftDiagonalTiles(TileState type, int x, int y) {
+        if (x == 0 || y == 0) {
+            return 0;
+        }
+        if (gameBoard[y - 1][x - 1].get() == type) {
+            return 1 + checkUpperLeftDiagonalTiles(type, x - 1, y - 1);
+        } else {
+            return 0;
+        }
+    }
+
+    private int checkDownRightDiagonalTiles(TileState type, int x, int y) {
+        if (x == gameBoard[0].length - 1 || y == gameBoard.length - 1) {
+            return 0;
+        }
+        if (gameBoard[y + 1][x + 1].get() == type) {
+            return 1 + checkDownRightDiagonalTiles(type, x + 1, y + 1);
+        } else {
+            return 0;
+        }
+    }
+
+    private int checkUpperRightDiagonalTiles(TileState type, int x, int y) {
+        if (x == gameBoard[0].length || y == 0) {
+            return 0;
+        }
+        if (gameBoard[y - 1][x + 1].get() == type) {
+            return 1 + checkUpperRightDiagonalTiles(type, x + 1, y - 1);
+        } else {
+            return 0;
+        }
+    }
+
+    private int checkDownLeftDiagonalTiles(TileState type, int x, int y) {
+        if (y == gameBoard.length || x == 0) {
+            return 0;
+        }
+        if (gameBoard[y + 1][x - 1].get() == type) {
+            return 1 + checkDownLeftDiagonalTiles(type, x - 1, y + 1);
+        } else {
+            return 0;
+        }
+    }
+
+    public void switchTurn() {
+        if (currentPlayerProperty.get() == TileState.CROSS) {
+            currentPlayerProperty.set(TileState.CIRCLE);
+        } else {
+            currentPlayerProperty.set(TileState.CROSS);
+        }
+    }
+
+    public ObjectProperty<TileState>[][] getGameBoard() {
+        return gameBoard;
+    }
+
+    public int getBoardXSize() {
+        return boardXSize;
+    }
+
+    public int getBoardYSize() {
+        return boardYSize;
+    }
+
+    public TileState getCurrentPlayer() {
+        return currentPlayerProperty.get();
+    }
+
+    public ObjectProperty<TileState> getCurrentPlayerProperty() {
+        return currentPlayerProperty;
+    }
+
+    public StringProperty getErrorProperty() {
+        return errorProperty;
+    }
+
+    public void clearError() {
+        errorProperty.set("");
+    }
+
+    public void setError(String error) {
+        errorProperty.set(error);
     }
 }
