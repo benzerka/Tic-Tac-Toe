@@ -1,5 +1,6 @@
 package com.benzerka.gui.components.alerts;
 
+import com.benzerka.logic.GameLogic;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;

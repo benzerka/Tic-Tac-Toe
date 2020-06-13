@@ -1,11 +1,12 @@
 package com.benzerka.logic;
 
-import com.benzerka.gui.components.alerts.AlertHandler;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class GameLogic {
@@ -17,6 +18,7 @@ public class GameLogic {
     private final int winningConditionSize;
     private ObjectProperty<TileState> currentPlayerProperty;
     private StringProperty errorProperty;
+    private List<Runnable> tieListeners = new ArrayList<>();
 
     @SuppressWarnings("unchecked")
     private GameLogic(int boardXSize, int boardYSize, int winningConditionSize) {
@@ -75,20 +77,15 @@ public class GameLogic {
         }
     }
 
+    public void addTieListener(Runnable listener) {
+        this.tieListeners.add(listener);
+    }
+
     private void handleTie() {
         if (isTie()) {
-            AlertHandler alertHandler = new AlertHandler();
-            switch (alertHandler.createTieAlert()) {
-                case 1:
-                    clearGameBoard();
-                    switchTurn();
-                    break;
-                case 2:
-                    clearGameBoard();
-                    switchTurn();
-                    // return to main menu
-                    break;
-            }
+            //wykryliśmy remis -> trzeba powiadomić inne komponenty
+            //pattern Observer
+            this.tieListeners.forEach(Runnable::run);
         }
     }
 
