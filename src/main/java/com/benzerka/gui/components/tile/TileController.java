@@ -105,11 +105,7 @@ public class TileController implements Initializable {
         if (currentTile.getTileState() == TileState.EMPTY) {
             gameLogic.clearError();
             currentTile.setTileState(currentTileState);
-            if(gameLogic.isFlaggedForReset()) {
-                gameLogic.handleSwitchTurn(true);
-            } else {
-                gameLogic.handleSwitchTurn(false);
-            }
+            gameLogic.switchTurn();
         } else {
             gameLogic.setError("This tile is occupied.");
         }

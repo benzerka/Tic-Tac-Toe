@@ -17,7 +17,6 @@ public class GameLogic {
     private final int winningConditionSize;
     private ObjectProperty<TileState> currentPlayerProperty;
     private StringProperty errorProperty;
-    private boolean flagForReset;
 
     @SuppressWarnings("unchecked")
     private GameLogic(int boardXSize, int boardYSize, int winningConditionSize) {
@@ -81,26 +80,16 @@ public class GameLogic {
             AlertHandler alertHandler = new AlertHandler();
             switch (alertHandler.createTieAlert()) {
                 case 1:
-                    handleSwitchTurn(false);
                     clearGameBoard();
-                    sendSwitchTurnRequest(true);
+                    switchTurn();
                     break;
                 case 2:
-                    handleSwitchTurn(false);
                     clearGameBoard();
-
+                    switchTurn();
                     // return to main menu
                     break;
             }
         }
-    }
-
-    public void handleSwitchTurn(boolean isFlagged) {
-        setFlaggedForReset(isFlagged);
-        if (isFlagged) {
-            resetPlayer();
-        }
-        switchTurn();
     }
 
     private boolean isTie() {
@@ -118,7 +107,7 @@ public class GameLogic {
     private void handleWinCondition(TileState type) {
         errorProperty.set(type + " won!");
         // don't allow to click on tiles?
-        // we call here a thing to show a screen that a win has occured
+        // we call here an alert to show a screen that a win has occured
     }
 
     private int checkLeftTiles(TileState type, int x, int y) {
@@ -255,13 +244,5 @@ public class GameLogic {
 
     public void resetPlayer() {
         currentPlayerProperty.setValue(setFirstPlayer());
-    }
-
-    public void setFlaggedForReset(boolean val) {
-        flagForReset = val;
-    }
-
-    public boolean isFlaggedForReset() {
-        return flagForReset;
     }
 }

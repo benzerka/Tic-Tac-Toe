@@ -47,7 +47,7 @@ public class SingleplayerController implements Initializable {
         for (int i = 0; i < boardYSize; i++) {
             for (int j = 0; j < boardXSize; j++) {
                 Tile tile = new Tile(gameBoard[i][j]);
-                // jakies alignmenty ogarnac tu
+                // TODO: alignmenty do ogarnięcia
                 tile.sendPosition(j, i);
                 this.gameBoard.add(tile, j, i);
             }
@@ -59,7 +59,6 @@ public class SingleplayerController implements Initializable {
     }
 
     public void playAgain(ActionEvent actionEvent) {
-        gameLogic.handleSwitchTurn(false);
         gameLogic.clearGameBoard();
     }
 }
