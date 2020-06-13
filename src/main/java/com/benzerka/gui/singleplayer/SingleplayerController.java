@@ -1,4 +1,4 @@
-package com.benzerka.singleplayer;
+package com.benzerka.gui.singleplayer;
 
 import com.benzerka.gui.components.tile.Tile;
 import com.benzerka.logic.GameLogic;
@@ -23,6 +23,10 @@ public class SingleplayerController implements Initializable {
 
     @FXML
     public Label errorLabel;
+
+    public GameLogic getGameLogic() {
+        return gameLogic;
+    }
 
     private GameLogic gameLogic;
 

@@ -1,4 +1,4 @@
-package com.benzerka.multiplayer;
+package com.benzerka.gui.multiplayer;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.GridPane;
@@ -19,5 +19,9 @@ public class MultiplayerWindow extends GridPane {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public MultiplayerController getMultiplayerController() {
+        return multiplayerController;
     }
 }

@@ -1,6 +1,6 @@
 package com.benzerka.gui.components.tile;
 
-import com.benzerka.gui.components.alerts.AlertHandler;
+import com.benzerka.gui.components.alerts.AlertCreator;
 import com.benzerka.logic.GameLogic;
 import com.benzerka.logic.TileState;
 import javafx.fxml.FXML;
@@ -40,7 +40,6 @@ public class TileController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.gameLogic = GameLogic.getInstance();
-        this.gameLogic.addTieListener(() -> new AlertHandler().createTieAlert());
     }
 
     public GameLogic getGameLogic() {

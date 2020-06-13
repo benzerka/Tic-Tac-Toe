@@ -1,14 +1,14 @@
-package com.benzerka.options;
+package com.benzerka.gui.multiplayer;
 
 import javafx.event.ActionEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
-public class OptionsController {
+public class MultiplayerController {
     private GridPane mainScreen;
     private VBox mainScreenMenu;
 
-    public OptionsController(GridPane mainScreen, VBox mainScreenMenu) {
+    public MultiplayerController(GridPane mainScreen, VBox mainScreenMenu) {
         this.mainScreen = mainScreen;
         this.mainScreenMenu = mainScreenMenu;
     }

@@ -1,8 +1,9 @@
 package com.benzerka.main;
 
-import com.benzerka.multiplayer.MultiplayerWindow;
-import com.benzerka.options.OptionsWindow;
-import com.benzerka.singleplayer.SingleplayerWindow;
+import com.benzerka.gui.components.GUIEventHandler;
+import com.benzerka.gui.multiplayer.MultiplayerWindow;
+import com.benzerka.gui.options.OptionsWindow;
+import com.benzerka.gui.singleplayer.SingleplayerWindow;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -20,26 +21,23 @@ public class MainController implements Initializable {
     @FXML
     public VBox mainScreenMenu;
 
-    private SingleplayerWindow singleplayerWindow;
-    private MultiplayerWindow multiplayerWindow;
-    private OptionsWindow optionsWindow;
+    @FXML
+    private GUIEventHandler guiEventHandler;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        singleplayerWindow = new SingleplayerWindow(mainScreen, mainScreenMenu);
-        multiplayerWindow = new MultiplayerWindow(mainScreen, mainScreenMenu);
-        optionsWindow = new OptionsWindow(mainScreen, mainScreenMenu);
+        guiEventHandler = new GUIEventHandler(mainScreen, mainScreenMenu);
     }
 
     public void singleplayer(ActionEvent actionEvent) {
-        mainScreen.getChildren().setAll(singleplayerWindow);
+        mainScreen.getChildren().setAll(guiEventHandler.getSingleplayerWindow());
     }
 
     public void multiplayer(ActionEvent actionEvent) {
-        mainScreen.getChildren().setAll(multiplayerWindow);
+        mainScreen.getChildren().setAll(guiEventHandler.getMultiplayerWindow());
     }
 
     public void options(ActionEvent actionEvent) {
-        mainScreen.getChildren().setAll(optionsWindow);
+        mainScreen.getChildren().setAll(guiEventHandler.getOptionsWindow());
     }
 }

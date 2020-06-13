@@ -19,6 +19,7 @@ public class GameLogic {
     private ObjectProperty<TileState> currentPlayerProperty;
     private StringProperty errorProperty;
     private List<Runnable> tieListeners = new ArrayList<>();
+    private List<Runnable> winListeners = new ArrayList<>();
 
     @SuppressWarnings("unchecked")
     private GameLogic(int boardXSize, int boardYSize, int winningConditionSize) {
@@ -71,7 +72,7 @@ public class GameLogic {
                 totalAboveDownElements >= winningConditionSize ||
                 totalUpperLeftDownRightDiagonalElements >= winningConditionSize ||
                 totalUpperRightDownLeftDiagonalElements >= winningConditionSize) {
-            handleWinCondition(type);
+            handleWin(type);
         } else {
             handleTie();
         }
@@ -81,10 +82,13 @@ public class GameLogic {
         this.tieListeners.add(listener);
     }
 
+    public void addWinListener(Runnable listener) {
+        this.winListeners.add(listener);
+    }
+
     private void handleTie() {
         if (isTie()) {
-            //wykryliśmy remis -> trzeba powiadomić inne komponenty
-            //pattern Observer
+            errorProperty.set("There's a tie!");
             this.tieListeners.forEach(Runnable::run);
         }
     }
@@ -101,10 +105,9 @@ public class GameLogic {
         return counter == (boardXSize * boardYSize);
     }
 
-    private void handleWinCondition(TileState type) {
+    private void handleWin(TileState type) {
         errorProperty.set(type + " won!");
-        // don't allow to click on tiles?
-        // we call here an alert to show a screen that a win has occured
+        this.winListeners.forEach(Runnable::run);
     }
 
     private int checkLeftTiles(TileState type, int x, int y) {

@@ -1,6 +1,5 @@
 package com.benzerka.main;
 
-import com.benzerka.gui.components.alerts.AlertHandler;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

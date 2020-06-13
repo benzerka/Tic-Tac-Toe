@@ -1,4 +1,4 @@
-package com.benzerka.options;
+package com.benzerka.gui.options;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.GridPane;
@@ -19,5 +19,9 @@ public class OptionsWindow extends GridPane {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public OptionsController getOptionsController() {
+        return optionsController;
     }
 }
