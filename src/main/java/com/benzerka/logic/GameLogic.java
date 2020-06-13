@@ -1,5 +1,6 @@
 package com.benzerka.logic;
 
+import com.benzerka.gui.components.alerts.AlertHandler;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -20,12 +21,16 @@ public class GameLogic {
     @SuppressWarnings("unchecked")
     private GameLogic(int boardXSize, int boardYSize, int winningConditionSize) {
         gameBoard = new SimpleObjectProperty[boardYSize][boardXSize];
-        currentPlayerProperty = new SimpleObjectProperty<>(TileState.CIRCLE);
+        currentPlayerProperty = new SimpleObjectProperty<>(setFirstPlayer());
         errorProperty = new SimpleStringProperty("");
         this.boardXSize = boardXSize;
         this.boardYSize = boardYSize;
         this.winningConditionSize = winningConditionSize;
-        clearGameBoard();
+        initiateGameBoard();
+    }
+
+    private TileState setFirstPlayer() {
+        return TileState.CIRCLE;
     }
 
     public static GameLogic getInstance() {
@@ -39,10 +44,18 @@ public class GameLogic {
         return INSTANCE;
     }
 
-    private void clearGameBoard() {
+    private void initiateGameBoard() {
         for (int i = 0; i < boardYSize; i++) {
             for (int j = 0; j < boardXSize; j++) {
                 gameBoard[i][j] = new SimpleObjectProperty<>(TileState.EMPTY);
+            }
+        }
+    }
+
+    public void clearGameBoard() {
+        for (int i = 0; i < boardYSize; i++) {
+            for (int j = 0; j < boardXSize; j++) {
+                gameBoard[i][j].setValue(TileState.EMPTY);
             }
         }
     }
@@ -52,16 +65,49 @@ public class GameLogic {
         int totalAboveDownElements = 1 + checkTilesAbove(type, x, y) + checkTilesBelow(type, x, y);
         int totalUpperLeftDownRightDiagonalElements = 1 + checkUpperLeftDiagonalTiles(type, x, y) + checkDownRightDiagonalTiles(type, x, y);
         int totalUpperRightDownLeftDiagonalElements = 1 + checkUpperRightDiagonalTiles(type, x, y) + checkDownLeftDiagonalTiles(type, x, y);
-        if (totalLeftRightElements == winningConditionSize ||
-                totalAboveDownElements == winningConditionSize ||
-                totalUpperLeftDownRightDiagonalElements == winningConditionSize ||
-                totalUpperRightDownLeftDiagonalElements == winningConditionSize) {
+        if (totalLeftRightElements >= winningConditionSize ||
+                totalAboveDownElements >= winningConditionSize ||
+                totalUpperLeftDownRightDiagonalElements >= winningConditionSize ||
+                totalUpperRightDownLeftDiagonalElements >= winningConditionSize) {
             handleWinCondition(type);
+        } else {
+            handleTie();
         }
     }
 
+    private void handleTie() {
+        if (isTie()) {
+            AlertHandler alertHandler = new AlertHandler();
+            switch (alertHandler.createTieAlert()) {
+                case 1:
+                    clearGameBoard();
+                    switchTurn();
+                    break;
+                case 2:
+                    clearGameBoard();
+                    switchTurn();
+                    // return to main menu
+                    break;
+            }
+        }
+    }
+
+    private boolean isTie() {
+        int counter = 0;
+        for (int i = 0; i < boardYSize; i++) {
+            for (int j = 0; j < boardXSize; j++) {
+                if (gameBoard[i][j].get() != TileState.EMPTY) {
+                    counter++;
+                }
+            }
+        }
+        return counter == (boardXSize * boardYSize);
+    }
+
     private void handleWinCondition(TileState type) {
-        System.out.print("Wygrały: " + type);
+        errorProperty.set(type + " won!");
+        // don't allow to click on tiles?
+        // we call here an alert to show a screen that a win has occured
     }
 
     private int checkLeftTiles(TileState type, int x, int y) {
@@ -133,7 +179,7 @@ public class GameLogic {
     }
 
     private int checkUpperRightDiagonalTiles(TileState type, int x, int y) {
-        if (x == gameBoard[0].length || y == 0) {
+        if (x == gameBoard[0].length - 1 || y == 0) {
             return 0;
         }
         if (gameBoard[y - 1][x + 1].get() == type) {
@@ -144,7 +190,7 @@ public class GameLogic {
     }
 
     private int checkDownLeftDiagonalTiles(TileState type, int x, int y) {
-        if (y == gameBoard.length || x == 0) {
+        if (y == gameBoard.length - 1 || x == 0) {
             return 0;
         }
         if (gameBoard[y + 1][x - 1].get() == type) {
@@ -157,8 +203,10 @@ public class GameLogic {
     public void switchTurn() {
         if (currentPlayerProperty.get() == TileState.CROSS) {
             currentPlayerProperty.set(TileState.CIRCLE);
-        } else {
+        } else if (currentPlayerProperty.get() == TileState.CIRCLE) {
             currentPlayerProperty.set(TileState.CROSS);
+        } else {
+            currentPlayerProperty.set(TileState.EMPTY);
         }
     }
 
@@ -192,5 +240,9 @@ public class GameLogic {
 
     public void setError(String error) {
         errorProperty.set(error);
+    }
+
+    public void resetPlayer() {
+        currentPlayerProperty.setValue(setFirstPlayer());
     }
 }
