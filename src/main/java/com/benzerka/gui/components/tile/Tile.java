@@ -15,6 +15,7 @@ import java.io.IOException;
 
 public class Tile extends GridPane {
     TileController tileController;
+
     private ObjectProperty<TileState> tileState;
     private Pane emptyPane;
     private Pane crossPane;
@@ -23,7 +24,6 @@ public class Tile extends GridPane {
     ObjectProperty<Paint> tileCircleColor = new SimpleObjectProperty<>(Color.BLUE);
     private int currentXPosition;
     private int currentYPosition;
-
     public void sendPosition(int x, int y) {
         currentXPosition = x;
         currentYPosition = y;
@@ -42,6 +42,10 @@ public class Tile extends GridPane {
             } else if (newValue == TileState.CIRCLE) {
                 circlePane.setVisible(true);
                 tileController.getGameLogic().checkWinningCondition(newValue, currentXPosition, currentYPosition);
+            } else if (newValue == TileState.EMPTY) {
+                circlePane.setVisible(false);
+                crossPane.setVisible(false);
+                tileController.getGameLogic().resetPlayer();
             }
             emptyPane.setVisible(false);
         });
@@ -106,5 +110,9 @@ public class Tile extends GridPane {
 
     public Pane getCirclePane() {
         return circlePane;
+    }
+
+    public TileController getTileController() {
+        return tileController;
     }
 }
