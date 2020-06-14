@@ -2,6 +2,8 @@ package com.benzerka.gui.components.tile;
 
 import com.benzerka.logic.GameLogic;
 import com.benzerka.logic.TileState;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -90,6 +92,21 @@ public class TileController {
 
     public void setCurrentTile(Tile currentTile) {
         this.currentTile = currentTile;
+    }
+
+    public void bindShapes() {
+//        circlePane.scaleXProperty().addListener((observable, oldValue, newValue) -> {
+//            circle.setScaleX(newValue.doubleValue());
+//        });
+//        circlePane.scaleYProperty().addListener((observable, oldValue, newValue) -> {
+//            circle.setScaleY(newValue.doubleValue());
+//        });
+//        circlePane.widthProperty().addListener((observable, oldValue, newValue) -> {
+//            circle.setRadius(newValue.doubleValue());
+//        });
+        circlePane.heightProperty().addListener((observable, oldValue, newValue) -> {
+            circle.setRadius(newValue.doubleValue()/2);
+        });
     }
 
     public void onClick(MouseEvent mouseEvent) {

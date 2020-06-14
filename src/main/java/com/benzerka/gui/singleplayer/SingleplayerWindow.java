@@ -77,6 +77,7 @@ public class SingleplayerWindow extends GridPane {
     }
 
     public void playAgain(ActionEvent actionEvent) {
+        gameLogic.getErrorProperty().set("");
         gameLogic.clearGameBoard();
     }
 }

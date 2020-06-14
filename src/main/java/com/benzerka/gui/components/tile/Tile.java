@@ -62,6 +62,7 @@ public class Tile extends GridPane {
             tileController.getLine2().strokeProperty().bind(tileCrossColor);
             tileController.getCircle().strokeProperty().bind(tileCircleColor);
             tileController.setCurrentTile(this);
+            tileController.bindShapes();
             emptyPane = tileController.getEmptyPane();
             crossPane = tileController.getCrossPane();
             circlePane = tileController.getCirclePane();
