@@ -3,14 +3,10 @@ package com.benzerka.gui.components.tile;
 import com.benzerka.logic.GameLogic;
 import com.benzerka.logic.TileState;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
-
-import java.net.URL;
-import java.util.ResourceBundle;
 
 public class TileController {
 
@@ -38,10 +34,6 @@ public class TileController {
 
     public TileController(GameLogic gameLogic) {
         this.gameLogic = gameLogic;
-    }
-
-    public GameLogic getGameLogic() {
-        return gameLogic;
     }
 
     public GameLogic getGameLogic() {

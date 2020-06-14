@@ -27,6 +27,10 @@ public class GUIEventHandler {
         multiplayerMenuWindow = new MultiplayerMenuWindow(mainScreen, mainScreenMenu, multiplayerWindow);
     }
 
+    public void updateSingleplayerWindow(SingleplayerWindow singleplayerWindow) {
+        this.singleplayerWindow = singleplayerWindow;
+    }
+
     private void addMultiplayerListeners() {
         // MULTIPLAYER
         // in case of a tie

@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<fx:root gridLinesVisible="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
-         minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" type="GridPane"
-         xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity"
+         prefHeight="400.0" prefWidth="600.0" type="GridPane" xmlns="http://javafx.com/javafx/8.0.121"
+         xmlns:fx="http://javafx.com/fxml/1">
     <columnConstraints>
         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
@@ -22,15 +24,54 @@
         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
     </rowConstraints>
     <children>
-        <HBox alignment="CENTER" spacing="10.0">
+        <VBox alignment="CENTER" spacing="5.0">
             <children>
-                <Label text="Select game:"/>
-                <ChoiceBox fx:id="choiceBox" prefWidth="150.0"/>
+                <Label text="Select game"/>
+                <ChoiceBox fx:id="choiceBox" prefWidth="100.0"/>
             </children>
-        </HBox>
-        <TextField alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-                   minWidth="-Infinity" prefHeight="25.0" prefWidth="35.0" GridPane.rowIndex="1"/>
-        <Label text="Before Singleplayer Window" GridPane.columnIndex="1"/>
+        </VBox>
+        <VBox alignment="CENTER" spacing="5.0" GridPane.columnIndex="1">
+            <children>
+                <Label text="Custom settings"/>
+                <GridPane fx:id="customSettings" disable="true" hgap="5.0">
+                    <columnConstraints>
+                        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                        <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                    </rowConstraints>
+                    <children>
+                        <Label text="x:"/>
+                        <TextField fx:id="boardXSizeTextField" alignment="CENTER" maxHeight="-Infinity"
+                                   maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0"
+                                   prefWidth="35.0" GridPane.columnIndex="1"/>
+                        <Label text="y:" GridPane.rowIndex="1"/>
+                        <TextField fx:id="boardYSizeTextField" alignment="CENTER" maxHeight="-Infinity"
+                                   maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0"
+                                   prefWidth="35.0" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                        <Label text="elements required to win:" GridPane.rowIndex="2"/>
+                        <TextField fx:id="winningConditionTextField" alignment="CENTER" maxHeight="-Infinity"
+                                   maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0"
+                                   prefWidth="35.0" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                        <Label text="All values must be in the range of 2 to 20" GridPane.columnSpan="2"
+                               GridPane.halignment="CENTER" GridPane.rowIndex="3"/>
+                    </children>
+                    <VBox.margin>
+                        <Insets/>
+                    </VBox.margin>
+                </GridPane>
+                <Label fx:id="errorLabel" text="Please input the value in correct range." textFill="#b90c0c"
+                       visible="false">
+                    <font>
+                        <Font name="System Bold" size="12.0"/>
+                    </font>
+                </Label>
+            </children>
+        </VBox>
         <Button mnemonicParsing="false" onAction="#startGame" text="Start Game" GridPane.columnIndex="1"
                 GridPane.rowIndex="2"/>
         <Button mnemonicParsing="false" onAction="#goBack" text="Go Back" GridPane.rowIndex="2"/>
