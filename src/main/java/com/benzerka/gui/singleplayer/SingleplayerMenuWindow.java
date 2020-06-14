@@ -50,18 +50,26 @@ public class SingleplayerMenuWindow extends GridPane implements Initializable {
             getGameSizeFromUser(newValue);
         });
         boardXSizeTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            scanText(newValue, boardXSizeTextField);
+            int x = scanText(newValue, boardXSizeTextField);
+            if (x != 0) {
+                boardXSize = x;
+            }
         });
         boardYSizeTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            scanText(newValue,  boardYSizeTextField);
+            int y = scanText(newValue, boardYSizeTextField);
+            if (y != 0) {
+                boardYSize = y;
+            }
         });
         winningConditionTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            scanText(newValue, winningConditionTextField);
+            int winCondition = scanText(newValue, winningConditionTextField);
+            if (winCondition != 0) {
+                this.winningCondition = winCondition;
+            }
         });
     }
 
-    private void scanText(String newValue, TextField textField) {
-        errorLabel.setVisible(false);
+    private int scanText(String newValue, TextField textField) {
         if (!newValue.matches("\\d*")) {
             textField.setText(newValue.replaceAll("[^\\d]", ""));
         }
@@ -70,8 +78,12 @@ public class SingleplayerMenuWindow extends GridPane implements Initializable {
             int x = Integer.valueOf(value);
             if (x < 2 || x > 20) {
                 errorLabel.setVisible(true);
+            } else {
+                errorLabel.setVisible(false);
+                return x;
             }
         }
+        return 0;
     }
 
     public SingleplayerMenuWindow(GridPane mainScreen, VBox mainScreenMenu, SingleplayerWindow singleplayerWindow, GUIEventHandler guiEventHandler) {
