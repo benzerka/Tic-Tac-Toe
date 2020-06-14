@@ -2,43 +2,32 @@ package com.benzerka.gui.components;
 
 import com.benzerka.gui.components.alerts.AlertCreator;
 import com.benzerka.gui.components.alerts.AlertResult;
-import com.benzerka.gui.multiplayer.MultiplayerController;
+import com.benzerka.gui.multiplayer.MultiplayerMenuWindow;
 import com.benzerka.gui.multiplayer.MultiplayerWindow;
-import com.benzerka.gui.options.OptionsController;
 import com.benzerka.gui.options.OptionsWindow;
-import com.benzerka.gui.singleplayer.SingleplayerController;
+import com.benzerka.gui.singleplayer.SingleplayerMenuWindow;
 import com.benzerka.gui.singleplayer.SingleplayerWindow;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
 public class GUIEventHandler {
     private SingleplayerWindow singleplayerWindow;
-    private SingleplayerController singleplayerController;
+    private SingleplayerMenuWindow singleplayerMenuWindow;
     private MultiplayerWindow multiplayerWindow;
-    private MultiplayerController multiplayerController;
-    private OptionsWindow optionsWindow;
-    private OptionsController optionsController;
 
+    private MultiplayerMenuWindow multiplayerMenuWindow;
+
+    private OptionsWindow optionsWindow;
     public GUIEventHandler(GridPane mainScreen, VBox mainScreenMenu) {
         singleplayerWindow = new SingleplayerWindow(mainScreen, mainScreenMenu);
-        singleplayerController = singleplayerWindow.getSingleplayerController();
         multiplayerWindow = new MultiplayerWindow(mainScreen, mainScreenMenu);
-        multiplayerController = multiplayerWindow.getMultiplayerController();
         optionsWindow = new OptionsWindow(mainScreen, mainScreenMenu);
-        optionsController = optionsWindow.getOptionsController();
-        // SINGLEPLAYER
-        // in case of a tie
-        singleplayerController.getGameLogic().addTieListener(() -> {
-            AlertResult alertResult = new AlertCreator().createTieAlert();
-            handleSingleplayerTie(alertResult);
-            singleplayerController.getGameLogic().getErrorProperty().set("");
-        });
-        // in case of a win
-        singleplayerController.getGameLogic().addWinListener(() -> {
-            AlertResult alertResult = new AlertCreator().createWinAlert();
-            handleSingleplayerWin(alertResult);
-            singleplayerController.getGameLogic().getErrorProperty().set("");
-        });
+        addMultiplayerListeners();
+        singleplayerMenuWindow = new SingleplayerMenuWindow(mainScreen, mainScreenMenu, singleplayerWindow, this);
+        multiplayerMenuWindow = new MultiplayerMenuWindow(mainScreen, mainScreenMenu, multiplayerWindow);
+    }
+
+    private void addMultiplayerListeners() {
         // MULTIPLAYER
         // in case of a tie
 
@@ -46,6 +35,22 @@ public class GUIEventHandler {
 
         // in case of a lose
 
+    }
+
+    public void addSingleplayerListeners() {
+        // SINGLEPLAYER
+        // in case of a tie
+        singleplayerWindow.getGameLogic().addTieListener(() -> {
+            AlertResult alertResult = new AlertCreator().createTieAlert();
+            handleSingleplayerTie(alertResult);
+            singleplayerWindow.getGameLogic().getErrorProperty().set("");
+        });
+        // in case of a win
+        singleplayerWindow.getGameLogic().addWinListener(() -> {
+            AlertResult alertResult = new AlertCreator().createWinAlert();
+            handleSingleplayerWin(alertResult);
+            singleplayerWindow.getGameLogic().getErrorProperty().set("");
+        });
     }
 
     private void handleSingleplayerWin(AlertResult alertResult) {
@@ -65,16 +70,24 @@ public class GUIEventHandler {
     }
 
     private void clearGameBoardAndSwitchTurn() {
-        singleplayerController.getGameLogic().clearGameBoard();
-        singleplayerController.getGameLogic().switchTurn();
+        singleplayerWindow.getGameLogic().clearGameBoard();
+        singleplayerWindow.getGameLogic().switchTurn();
     }
 
     public SingleplayerWindow getSingleplayerWindow() {
         return singleplayerWindow;
     }
 
+    public SingleplayerMenuWindow getSingleplayerMenuWindow() {
+        return singleplayerMenuWindow;
+    }
+
     public MultiplayerWindow getMultiplayerWindow() {
         return multiplayerWindow;
+    }
+
+    public MultiplayerMenuWindow getMultiplayerMenuWindow() {
+        return multiplayerMenuWindow;
     }
 
     public OptionsWindow getOptionsWindow() {

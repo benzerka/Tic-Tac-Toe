@@ -1,5 +1,6 @@
 package com.benzerka.gui.components.tile;
 
+import com.benzerka.logic.GameLogic;
 import com.benzerka.logic.TileState;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -24,12 +25,13 @@ public class Tile extends GridPane {
     ObjectProperty<Paint> tileCircleColor = new SimpleObjectProperty<>(Color.BLUE);
     private int currentXPosition;
     private int currentYPosition;
+
     public void sendPosition(int x, int y) {
         currentXPosition = x;
         currentYPosition = y;
     }
 
-    public Tile(ObjectProperty<TileState> tileState) {
+    public Tile(ObjectProperty<TileState> tileState, GameLogic gameLogic) {
         super();
         this.tileState = new SimpleObjectProperty<>();
         this.tileState.bindBidirectional(tileState);
@@ -52,7 +54,7 @@ public class Tile extends GridPane {
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("TileRoot.fxml"));
-            tileController = new TileController();
+            tileController = new TileController(gameLogic);
             loader.setController(tileController);
             Node node = loader.load();
             this.getChildren().add(node);

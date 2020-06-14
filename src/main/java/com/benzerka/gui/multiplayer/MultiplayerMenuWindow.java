@@ -1,4 +1,4 @@
-package com.benzerka.gui.options;
+package com.benzerka.gui.multiplayer;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -7,15 +7,17 @@ import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 
-public class OptionsWindow extends GridPane {
+public class MultiplayerMenuWindow extends GridPane {
     private GridPane mainScreen;
     private VBox mainScreenMenu;
+    private MultiplayerWindow multiplayerWindow;
 
-    public OptionsWindow(GridPane mainScreen, VBox mainScreenMenu) {
+    public MultiplayerMenuWindow(GridPane mainScreen, VBox mainScreenMenu, MultiplayerWindow multiplayerWindow) {
         this.mainScreen = mainScreen;
         this.mainScreenMenu = mainScreenMenu;
+        this.multiplayerWindow = multiplayerWindow;
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("OptionsRoot.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("MultiplayerMenuRoot.fxml"));
             loader.setRoot(this);
             loader.setController(this);
             loader.load();
@@ -24,7 +26,11 @@ public class OptionsWindow extends GridPane {
         }
     }
 
-    public void returnToMainScreen(ActionEvent actionEvent) {
+    public void startGame(ActionEvent actionEvent) {
+        mainScreen.getChildren().setAll(multiplayerWindow);
+    }
+
+    public void goBack(ActionEvent actionEvent) {
         mainScreen.getChildren().setAll(mainScreenMenu);
     }
 }

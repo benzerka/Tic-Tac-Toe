@@ -7,22 +7,20 @@ import javafx.beans.property.StringProperty;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class GameLogic {
-    private static GameLogic INSTANCE;
     private ObjectProperty<TileState>[][] gameBoard;
 
-    private final int boardXSize;
-    private final int boardYSize;
-    private final int winningConditionSize;
+    private int boardXSize;
+    private int boardYSize;
+    private int winningConditionSize;
     private ObjectProperty<TileState> currentPlayerProperty;
     private StringProperty errorProperty;
     private List<Runnable> tieListeners = new ArrayList<>();
     private List<Runnable> winListeners = new ArrayList<>();
 
     @SuppressWarnings("unchecked")
-    private GameLogic(int boardXSize, int boardYSize, int winningConditionSize) {
+    public GameLogic(int boardXSize, int boardYSize, int winningConditionSize) {
         gameBoard = new SimpleObjectProperty[boardYSize][boardXSize];
         currentPlayerProperty = new SimpleObjectProperty<>(setFirstPlayer());
         errorProperty = new SimpleStringProperty("");
@@ -32,19 +30,11 @@ public class GameLogic {
         initiateGameBoard();
     }
 
+    public GameLogic() {
+    }
+
     private TileState setFirstPlayer() {
         return TileState.CIRCLE;
-    }
-
-    public static GameLogic getInstance() {
-        return getInstance(3, 3, 3);
-    }
-
-    public static GameLogic getInstance(int boardXSize, int boardYSize, int winningConditionSize) {
-        if (Objects.isNull(INSTANCE)) {
-            INSTANCE = new GameLogic(boardXSize, boardYSize, winningConditionSize);
-        }
-        return INSTANCE;
     }
 
     private void initiateGameBoard() {
@@ -88,7 +78,7 @@ public class GameLogic {
 
     private void handleTie() {
         if (isTie()) {
-            errorProperty.set("There's a tie!");
+            errorProperty.set("There is a tie!");
             this.tieListeners.forEach(Runnable::run);
         }
     }

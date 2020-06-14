@@ -1,9 +1,6 @@
 package com.benzerka.main;
 
 import com.benzerka.gui.components.GUIEventHandler;
-import com.benzerka.gui.multiplayer.MultiplayerWindow;
-import com.benzerka.gui.options.OptionsWindow;
-import com.benzerka.gui.singleplayer.SingleplayerWindow;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -30,11 +27,11 @@ public class MainController implements Initializable {
     }
 
     public void singleplayer(ActionEvent actionEvent) {
-        mainScreen.getChildren().setAll(guiEventHandler.getSingleplayerWindow());
+        mainScreen.getChildren().setAll(guiEventHandler.getSingleplayerMenuWindow());
     }
 
     public void multiplayer(ActionEvent actionEvent) {
-        mainScreen.getChildren().setAll(guiEventHandler.getMultiplayerWindow());
+        mainScreen.getChildren().setAll(guiEventHandler.getMultiplayerMenuWindow());
     }
 
     public void options(ActionEvent actionEvent) {
