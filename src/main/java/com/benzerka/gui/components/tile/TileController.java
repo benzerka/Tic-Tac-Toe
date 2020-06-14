@@ -12,7 +12,7 @@ import javafx.scene.shape.Line;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class TileController implements Initializable {
+public class TileController {
 
     @FXML
     private Line line1;
@@ -36,9 +36,12 @@ public class TileController implements Initializable {
 
     private GameLogic gameLogic;
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        this.gameLogic = GameLogic.getInstance();
+    public TileController(GameLogic gameLogic) {
+        this.gameLogic = gameLogic;
+    }
+
+    public GameLogic getGameLogic() {
+        return gameLogic;
     }
 
     public GameLogic getGameLogic() {

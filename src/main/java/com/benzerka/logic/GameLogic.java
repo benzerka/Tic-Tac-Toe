@@ -1,25 +1,26 @@
 package com.benzerka.logic;
 
-import com.benzerka.gui.components.alerts.AlertHandler;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GameLogic {
-    private static GameLogic INSTANCE;
     private ObjectProperty<TileState>[][] gameBoard;
 
-    private final int boardXSize;
-    private final int boardYSize;
-    private final int winningConditionSize;
+    private int boardXSize;
+    private int boardYSize;
+    private int winningConditionSize;
     private ObjectProperty<TileState> currentPlayerProperty;
     private StringProperty errorProperty;
+    private List<Runnable> tieListeners = new ArrayList<>();
+    private List<Runnable> winListeners = new ArrayList<>();
 
     @SuppressWarnings("unchecked")
-    private GameLogic(int boardXSize, int boardYSize, int winningConditionSize) {
+    public GameLogic(int boardXSize, int boardYSize, int winningConditionSize) {
         gameBoard = new SimpleObjectProperty[boardYSize][boardXSize];
         currentPlayerProperty = new SimpleObjectProperty<>(setFirstPlayer());
         errorProperty = new SimpleStringProperty("");
@@ -29,19 +30,11 @@ public class GameLogic {
         initiateGameBoard();
     }
 
+    public GameLogic() {
+    }
+
     private TileState setFirstPlayer() {
         return TileState.CIRCLE;
-    }
-
-    public static GameLogic getInstance() {
-        return getInstance(3, 3, 3);
-    }
-
-    public static GameLogic getInstance(int boardXSize, int boardYSize, int winningConditionSize) {
-        if (Objects.isNull(INSTANCE)) {
-            INSTANCE = new GameLogic(boardXSize, boardYSize, winningConditionSize);
-        }
-        return INSTANCE;
     }
 
     private void initiateGameBoard() {
@@ -69,26 +62,24 @@ public class GameLogic {
                 totalAboveDownElements >= winningConditionSize ||
                 totalUpperLeftDownRightDiagonalElements >= winningConditionSize ||
                 totalUpperRightDownLeftDiagonalElements >= winningConditionSize) {
-            handleWinCondition(type);
+            handleWin(type);
         } else {
             handleTie();
         }
     }
 
+    public void addTieListener(Runnable listener) {
+        this.tieListeners.add(listener);
+    }
+
+    public void addWinListener(Runnable listener) {
+        this.winListeners.add(listener);
+    }
+
     private void handleTie() {
         if (isTie()) {
-            AlertHandler alertHandler = new AlertHandler();
-            switch (alertHandler.createTieAlert()) {
-                case 1:
-                    clearGameBoard();
-                    switchTurn();
-                    break;
-                case 2:
-                    clearGameBoard();
-                    switchTurn();
-                    // return to main menu
-                    break;
-            }
+            errorProperty.set("There is a tie!");
+            this.tieListeners.forEach(Runnable::run);
         }
     }
 
@@ -104,10 +95,9 @@ public class GameLogic {
         return counter == (boardXSize * boardYSize);
     }
 
-    private void handleWinCondition(TileState type) {
+    private void handleWin(TileState type) {
         errorProperty.set(type + " won!");
-        // don't allow to click on tiles?
-        // we call here an alert to show a screen that a win has occured
+        this.winListeners.forEach(Runnable::run);
     }
 
     private int checkLeftTiles(TileState type, int x, int y) {
