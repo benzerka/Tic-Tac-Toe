@@ -1,12 +1,29 @@
-.label {
--fx-font-smoothing-type: gray;
--fx-text-fill: #F6FFC8;
--fx-font-size: 81;
--fx-font-weight: bold;
--fx-smooth: true;
--fx-effect: dropshadow(gaussian, #B9B9B9, 0, 0.0, 0, 5);
+.tictactoe {
+    -fx-font-smoothing-type: gray;
+    -fx-text-fill: #F6FFC8;
+    -fx-font-size: 85;
+    -fx-font-weight: bold;
+    -fx-smooth: true;
+    -fx-effect: dropshadow(gaussian, #B9B9B9, 0, 0.0, 0, 5);
 }
 
-VBox {
+GridPane {
 -fx-background-color: #61FFC6;
+}
+
+.button {
+    -fx-text-fill: #99857B;
+    -fx-font-weight: bold;
+    -fx-background-color: #F6FFC8;
+    -fx-effect: dropshadow(gaussian, #B9B9B9, 0, 0.0, 0, 3);
+}
+
+.text-field {
+    -fx-background-color: #F6FFC8;
+    -fx-effect: dropshadow(gaussian, #B9B9B9, 0, 0.0, 0, 3);
+}
+
+.choice-box {
+    -fx-background-color: #F6FFC8;
+    -fx-effect: dropshadow(gaussian, #B9B9B9, 0, 0.0, 0, 3);
 }

@@ -1,31 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Ellipse?>
 <?import javafx.scene.shape.Line?>
 
-<GridPane alignment="CENTER" onMouseClicked="#onClick" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
+<GridPane alignment="CENTER" onMouseClicked="#onClick" stylesheets="@Tile.css" xmlns="http://javafx.com/javafx/8.0.121"
+          xmlns:fx="http://javafx.com/fxml/1">
     <columnConstraints>
-        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0"/>
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints minHeight="10.0" vgrow="ALWAYS" />
+        <RowConstraints minHeight="10.0" vgrow="ALWAYS"/>
     </rowConstraints>
     <children>
-        <Pane fx:id="crossPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="100.0" visible="false" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+        <Pane fx:id="crossPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0"
+              minWidth="0.0" prefHeight="100.0" prefWidth="100.0" visible="false" GridPane.hgrow="ALWAYS"
+              GridPane.vgrow="ALWAYS">
             <children>
-                <Line fx:id="line1" endX="100.0" startY="100.0" stroke="#ff1100" strokeWidth="3.0" />
-                <Line fx:id="line2" endX="100.0" endY="100.0" stroke="#ff1100" strokeWidth="3.0" />
+                <Line fx:id="line1" endX="100.0" startY="100.0" stroke="#ff1100" strokeWidth="3.0"/>
+                <Line fx:id="line2" endX="100.0" endY="100.0" stroke="#ff1100" strokeWidth="3.0"/>
             </children>
         </Pane>
-        <Pane fx:id="circlePane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="100.0" visible="false" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+        <Pane fx:id="ellipsePane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0"
+              minWidth="0.0" prefHeight="100.0" prefWidth="100.0" visible="false" GridPane.hgrow="ALWAYS"
+              GridPane.vgrow="ALWAYS">
             <children>
-                <Circle fx:id="circle" centerX="50.0" centerY="50.0" fill="TRANSPARENT" radius="50.0" stroke="#0026ff" strokeType="INSIDE" strokeWidth="3.0" />
+                <Ellipse fx:id="ellipse" centerX="50.0" centerY="50.0" fill="TRANSPARENT" radiusX="50.0" radiusY="50.0"
+                         stroke="#0026ff" strokeType="INSIDE" strokeWidth="3.0"/>
             </children>
         </Pane>
-        <Pane fx:id="emptyPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="100.0" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" />
+        <Pane fx:id="emptyPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0"
+              prefHeight="100.0" prefWidth="100.0" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
     </children>
+    <opaqueInsets>
+        <Insets/>
+    </opaqueInsets>
 </GridPane>

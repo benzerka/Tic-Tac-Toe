@@ -19,10 +19,12 @@ public class GameLogic {
     private List<Runnable> tieListeners = new ArrayList<>();
     private List<Runnable> winListeners = new ArrayList<>();
 
+    private String winner;
+
     @SuppressWarnings("unchecked")
     public GameLogic(int boardXSize, int boardYSize, int winningConditionSize) {
         gameBoard = new SimpleObjectProperty[boardYSize][boardXSize];
-        currentPlayerProperty = new SimpleObjectProperty<>(setFirstPlayer());
+        currentPlayerProperty = new SimpleObjectProperty<>(getFirstPlayer());
         errorProperty = new SimpleStringProperty("");
         this.boardXSize = boardXSize;
         this.boardYSize = boardYSize;
@@ -30,10 +32,7 @@ public class GameLogic {
         initiateGameBoard();
     }
 
-    public GameLogic() {
-    }
-
-    private TileState setFirstPlayer() {
+    private TileState getFirstPlayer() {
         return TileState.CIRCLE;
     }
 
@@ -62,7 +61,7 @@ public class GameLogic {
                 totalAboveDownElements >= winningConditionSize ||
                 totalUpperLeftDownRightDiagonalElements >= winningConditionSize ||
                 totalUpperRightDownLeftDiagonalElements >= winningConditionSize) {
-            handleWin(type);
+            handleWin();
         } else {
             handleTie();
         }
@@ -95,8 +94,9 @@ public class GameLogic {
         return counter == (boardXSize * boardYSize);
     }
 
-    private void handleWin(TileState type) {
-        errorProperty.set(type + " won!");
+    private void handleWin() {
+        setWinner();
+        errorProperty.set(winner + " won!");
         this.winListeners.forEach(Runnable::run);
     }
 
@@ -233,6 +233,33 @@ public class GameLogic {
     }
 
     public void resetPlayer() {
-        currentPlayerProperty.setValue(setFirstPlayer());
+        currentPlayerProperty.setValue(getFirstPlayer());
+    }
+
+    public String getWinner() {
+        return winner;
+    }
+
+    public void setWinner() {
+        TileState firstPlayer = getFirstPlayer();
+        switch (currentPlayerProperty.get()) {
+            case CROSS:
+                if (firstPlayer == TileState.CROSS) {
+                    winner = "Player 1";
+                } else if (firstPlayer == TileState.CIRCLE) {
+                    winner = "Player 2";
+                }
+                break;
+            case CIRCLE:
+                if (firstPlayer == TileState.CIRCLE) {
+                    winner = "Player 1";
+                } else if (firstPlayer == TileState.CROSS) {
+                    winner = "Player 2";
+                }
+                break;
+            default:
+                winner = "Unknown";
+                break;
+        }
     }
 }

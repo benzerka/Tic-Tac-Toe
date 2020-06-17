@@ -53,18 +53,24 @@ public class SingleplayerMenuWindow extends GridPane implements Initializable {
             int x = scanText(newValue, boardXSizeTextField);
             if (x != 0) {
                 boardXSize = x;
+            } else {
+                boardXSize = 3;
             }
         });
         boardYSizeTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             int y = scanText(newValue, boardYSizeTextField);
             if (y != 0) {
                 boardYSize = y;
+            } else {
+                boardYSize = 3;
             }
         });
         winningConditionTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             int winCondition = scanText(newValue, winningConditionTextField);
             if (winCondition != 0) {
                 this.winningCondition = winCondition;
+            } else {
+                this.winningCondition = 3;
             }
         });
     }

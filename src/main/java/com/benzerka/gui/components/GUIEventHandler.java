@@ -51,10 +51,17 @@ public class GUIEventHandler {
         });
         // in case of a win
         singleplayerWindow.getGameLogic().addWinListener(() -> {
-            AlertResult alertResult = new AlertCreator().createWinAlert();
+            String winner = singleplayerWindow.getGameLogic().getWinner();
+            //draw a line across the winning elements?
+            drawWinLine();
+            AlertResult alertResult = new AlertCreator(winner).createWinAlert();
             handleSingleplayerWin(alertResult);
             singleplayerWindow.getGameLogic().getErrorProperty().set("");
         });
+    }
+
+    private void drawWinLine() {
+
     }
 
     private void handleSingleplayerWin(AlertResult alertResult) {
