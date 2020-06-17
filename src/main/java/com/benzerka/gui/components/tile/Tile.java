@@ -20,7 +20,7 @@ public class Tile extends GridPane {
     private ObjectProperty<TileState> tileState;
     private Pane emptyPane;
     private Pane crossPane;
-    private Pane circlePane;
+    private Pane ellipsePane;
     ObjectProperty<Paint> tileCrossColor = new SimpleObjectProperty<>(Color.RED);
     ObjectProperty<Paint> tileCircleColor = new SimpleObjectProperty<>(Color.BLUE);
     private int currentXPosition;
@@ -35,17 +35,17 @@ public class Tile extends GridPane {
         super();
         this.tileState = new SimpleObjectProperty<>();
         this.tileState.bindBidirectional(tileState);
-        this.setPadding(new Insets(5, 5, 5, 5));
+        this.setPadding(new Insets(2, 2, 2, 2));
 
         this.tileState.addListener((observable, oldValue, newValue) -> {
             if (newValue == TileState.CROSS) {
                 crossPane.setVisible(true);
                 tileController.getGameLogic().checkWinningCondition(newValue, currentXPosition, currentYPosition);
             } else if (newValue == TileState.CIRCLE) {
-                circlePane.setVisible(true);
+                ellipsePane.setVisible(true);
                 tileController.getGameLogic().checkWinningCondition(newValue, currentXPosition, currentYPosition);
             } else if (newValue == TileState.EMPTY) {
-                circlePane.setVisible(false);
+                ellipsePane.setVisible(false);
                 crossPane.setVisible(false);
                 tileController.getGameLogic().resetPlayer();
             }
@@ -60,12 +60,12 @@ public class Tile extends GridPane {
             this.getChildren().add(node);
             tileController.getLine1().strokeProperty().bind(tileCrossColor);
             tileController.getLine2().strokeProperty().bind(tileCrossColor);
-            tileController.getCircle().strokeProperty().bind(tileCircleColor);
+            tileController.getEllipse().strokeProperty().bind(tileCircleColor);
             tileController.setCurrentTile(this);
             tileController.bindShapes();
             emptyPane = tileController.getEmptyPane();
             crossPane = tileController.getCrossPane();
-            circlePane = tileController.getCirclePane();
+            ellipsePane = tileController.getEllipsePane();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -111,8 +111,8 @@ public class Tile extends GridPane {
         return crossPane;
     }
 
-    public Pane getCirclePane() {
-        return circlePane;
+    public Pane getEllipsePane() {
+        return ellipsePane;
     }
 
     public TileController getTileController() {

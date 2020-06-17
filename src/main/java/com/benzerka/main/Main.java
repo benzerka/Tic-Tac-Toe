@@ -1,6 +1,5 @@
 package com.benzerka.main;
 
-import com.benzerka.gui.components.alerts.AlertHandler;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -11,6 +10,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("MainRoot.fxml"));
+        root.getStylesheets().add(getClass().getResource("Main.css").toExternalForm());
         primaryStage.setTitle("Tic-Tac-Toe");
         primaryStage.setScene(new Scene(root, 800, 600));
         primaryStage.setMinWidth(500);

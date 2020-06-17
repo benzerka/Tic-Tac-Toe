@@ -2,12 +2,10 @@ package com.benzerka.gui.components.tile;
 
 import com.benzerka.logic.GameLogic;
 import com.benzerka.logic.TileState;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Circle;
+import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Line;
 
 public class TileController {
@@ -19,7 +17,7 @@ public class TileController {
     private Line line2;
 
     @FXML
-    private Circle circle;
+    private Ellipse ellipse;
 
     @FXML
     private Pane emptyPane;
@@ -28,11 +26,13 @@ public class TileController {
     private Pane crossPane;
 
     @FXML
-    private Pane circlePane;
+    private Pane ellipsePane;
 
     private Tile currentTile;
 
     private GameLogic gameLogic;
+
+    public TileController() {}
 
     public TileController(GameLogic gameLogic) {
         this.gameLogic = gameLogic;
@@ -58,12 +58,12 @@ public class TileController {
         this.crossPane = crossPane;
     }
 
-    public Pane getCirclePane() {
-        return circlePane;
+    public Pane getEllipsePane() {
+        return ellipsePane;
     }
 
-    public void setCirclePane(Pane circlePane) {
-        this.circlePane = circlePane;
+    public void setEllipsePane(Pane ellipsePane) {
+        this.ellipsePane = ellipsePane;
     }
 
     public Line getLine1() {
@@ -82,12 +82,12 @@ public class TileController {
         this.line2 = line2;
     }
 
-    public Circle getCircle() {
-        return circle;
+    public Ellipse getEllipse() {
+        return ellipse;
     }
 
-    public void setCircle(Circle circle) {
-        this.circle = circle;
+    public void setEllipse(Ellipse ellipse) {
+        this.ellipse = ellipse;
     }
 
     public void setCurrentTile(Tile currentTile) {
@@ -95,18 +95,27 @@ public class TileController {
     }
 
     public void bindShapes() {
-//        circlePane.scaleXProperty().addListener((observable, oldValue, newValue) -> {
-//            circle.setScaleX(newValue.doubleValue());
-//        });
-//        circlePane.scaleYProperty().addListener((observable, oldValue, newValue) -> {
-//            circle.setScaleY(newValue.doubleValue());
-//        });
-//        circlePane.widthProperty().addListener((observable, oldValue, newValue) -> {
-//            circle.setRadius(newValue.doubleValue());
-//        });
-        circlePane.heightProperty().addListener((observable, oldValue, newValue) -> {
-            circle.setRadius(newValue.doubleValue()/2);
-        });
+        bindEllipse();
+        bindCross();
+    }
+
+    private void bindCross() {
+        line2.startXProperty().setValue(2);
+        line2.startYProperty().setValue(2);
+        line2.endXProperty().bind(crossPane.widthProperty().subtract(2));
+        line2.endYProperty().bind(crossPane.heightProperty().subtract(2));
+
+        line1.startXProperty().setValue(2);
+        line1.startYProperty().bind(crossPane.heightProperty().subtract(2));
+        line1.endXProperty().bind(crossPane.widthProperty().subtract(2));
+        line1.endYProperty().setValue(2);
+    }
+
+    private void bindEllipse() {
+        ellipse.radiusXProperty().bind(ellipsePane.widthProperty().divide(2));
+        ellipse.radiusYProperty().bind(ellipsePane.heightProperty().divide(2));
+        ellipse.centerXProperty().bind(ellipsePane.widthProperty().divide(2));
+        ellipse.centerYProperty().bind(ellipsePane.heightProperty().divide(2));
     }
 
     public void onClick(MouseEvent mouseEvent) {

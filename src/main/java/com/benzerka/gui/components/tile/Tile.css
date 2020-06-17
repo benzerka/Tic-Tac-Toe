@@ -1,0 +1,13 @@
+GridPane {
+    -fx-background-color: #F6FFC8;
+    -fx-border-color: #B9B9B9;
+    -fx-border-width: 2;
+    -fx-border-style: solid line-cap square;
+}
+
+GridPane:hover {
+    -fx-background-color: #D7DFAF;
+    -fx-border-color: #A2A2A2;
+    -fx-border-width: 2;
+    -fx-border-style: solid line-cap square;
+}

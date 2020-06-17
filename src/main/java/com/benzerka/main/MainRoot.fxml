@@ -8,9 +8,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<GridPane fx:id="mainScreen" alignment="CENTER" gridLinesVisible="true" maxHeight="1.7976931348623157E308"
-          maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
-          prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
+<GridPane fx:id="mainScreen" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+          minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0"
+          xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
           fx:controller="com.benzerka.main.MainController">
     <columnConstraints>
         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
@@ -19,11 +19,11 @@
         <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES"/>
     </rowConstraints>
     <children>
-        <VBox fx:id="mainScreenMenu" alignment="CENTER" stylesheets="@Main.css">
+        <VBox fx:id="mainScreenMenu" alignment="CENTER">
             <children>
                 <VBox alignment="CENTER" VBox.vgrow="SOMETIMES">
                     <children>
-                        <Label text="Tic-Tac-Toe"/>
+                        <Label fx:id="tictactoe" text="Tic-Tac-Toe"/>
                     </children>
                 </VBox>
                 <VBox alignment="CENTER" spacing="25.0" VBox.vgrow="SOMETIMES">
@@ -31,6 +31,7 @@
                         <Button mnemonicParsing="false" onAction="#singleplayer" text="Singleplayer"/>
                         <Button mnemonicParsing="false" onAction="#multiplayer" text="Multiplayer"/>
                         <Button mnemonicParsing="false" onAction="#options" text="Options"/>
+                        <Button mnemonicParsing="false" onAction="#quit" text="Quit"/>
                     </children>
                     <opaqueInsets>
                         <Insets/>
