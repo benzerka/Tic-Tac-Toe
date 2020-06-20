@@ -1,5 +1,6 @@
 package com.benzerka.gui.components.tile;
 
+import com.benzerka.gui.components.PlayerModelGetter;
 import com.benzerka.logic.GameLogic;
 import com.benzerka.logic.TileState;
 import javafx.beans.property.ObjectProperty;
@@ -9,7 +10,6 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 import java.io.IOException;
@@ -21,8 +21,8 @@ public class Tile extends GridPane {
     private Pane emptyPane;
     private Pane crossPane;
     private Pane ellipsePane;
-    ObjectProperty<Paint> tileCrossColor = new SimpleObjectProperty<>(Color.RED);
-    ObjectProperty<Paint> tileCircleColor = new SimpleObjectProperty<>(Color.BLUE);
+    private Pane trianglePane;
+    private Pane starPane;
     private int currentXPosition;
     private int currentYPosition;
 
@@ -31,7 +31,7 @@ public class Tile extends GridPane {
         currentYPosition = y;
     }
 
-    public Tile(ObjectProperty<TileState> tileState, GameLogic gameLogic) {
+    public Tile(ObjectProperty<TileState> tileState, GameLogic gameLogic, PlayerModelGetter playerModelGetter) {
         super();
         this.tileState = new SimpleObjectProperty<>();
         this.tileState.bindBidirectional(tileState);
@@ -40,13 +40,21 @@ public class Tile extends GridPane {
         this.tileState.addListener((observable, oldValue, newValue) -> {
             if (newValue == TileState.CROSS) {
                 crossPane.setVisible(true);
-                tileController.getGameLogic().checkWinningCondition(newValue, currentXPosition, currentYPosition);
+                checkForWinCondition(newValue);
             } else if (newValue == TileState.CIRCLE) {
                 ellipsePane.setVisible(true);
-                tileController.getGameLogic().checkWinningCondition(newValue, currentXPosition, currentYPosition);
+                checkForWinCondition(newValue);
+            } else if (newValue == TileState.TRIANGLE) {
+                trianglePane.setVisible(true);
+                checkForWinCondition(newValue);
+            } else if (newValue == TileState.STAR) {
+                starPane.setVisible(true);
+                checkForWinCondition(newValue);
             } else if (newValue == TileState.EMPTY) {
                 ellipsePane.setVisible(false);
                 crossPane.setVisible(false);
+                trianglePane.setVisible(false);
+                starPane.setVisible(false);
                 tileController.getGameLogic().resetPlayer();
             }
             emptyPane.setVisible(false);
@@ -54,46 +62,26 @@ public class Tile extends GridPane {
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("TileRoot.fxml"));
-            tileController = new TileController(gameLogic);
+            tileController = new TileController(gameLogic, playerModelGetter);
             loader.setController(tileController);
             Node node = loader.load();
             this.getChildren().add(node);
-            tileController.getLine1().strokeProperty().bind(tileCrossColor);
-            tileController.getLine2().strokeProperty().bind(tileCrossColor);
-            tileController.getEllipse().strokeProperty().bind(tileCircleColor);
             tileController.setCurrentTile(this);
-            tileController.bindShapes();
             emptyPane = tileController.getEmptyPane();
             crossPane = tileController.getCrossPane();
             ellipsePane = tileController.getEllipsePane();
+            trianglePane = tileController.getTrianglePane();
+            starPane = tileController.getStarPane();
+            tileController.bindShapes();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public final Paint getTileCrossColor() {
-        return tileCrossColor.get();
+    private void checkForWinCondition(TileState newValue) {
+        tileController.getGameLogic().checkWinningCondition(newValue, currentXPosition, currentYPosition);
     }
 
-    public ObjectProperty<Paint> tileCrossColorProperty() {
-        return tileCrossColor;
-    }
-
-    public final void setTileCrossColor(Paint tileCrossColor) {
-        this.tileCrossColor.set(tileCrossColor);
-    }
-
-    public Paint getTileCircleColor() {
-        return tileCircleColor.get();
-    }
-
-    public ObjectProperty<Paint> tileCircleColorProperty() {
-        return tileCircleColor;
-    }
-
-    public void setTileCircleColor(Paint tileCircleColor) {
-        this.tileCircleColor.set(tileCircleColor);
-    }
 
     public TileState getTileState() {
         return tileState.get();
@@ -101,21 +89,5 @@ public class Tile extends GridPane {
 
     public void setTileState(TileState tileState) {
         this.tileState.set(tileState);
-    }
-
-    public Pane getEmptyPane() {
-        return emptyPane;
-    }
-
-    public Pane getCrossPane() {
-        return crossPane;
-    }
-
-    public Pane getEllipsePane() {
-        return ellipsePane;
-    }
-
-    public TileController getTileController() {
-        return tileController;
     }
 }

@@ -1,5 +1,6 @@
 package com.benzerka.gui.singleplayer;
 
+import com.benzerka.gui.components.PlayerModelGetter;
 import com.benzerka.gui.components.tile.Tile;
 import com.benzerka.logic.GameLogic;
 import com.benzerka.logic.TileState;
@@ -30,7 +31,10 @@ public class SingleplayerWindow extends GridPane {
     private GameLogic gameLogic;
 
     private GridPane mainScreen;
+
     private VBox mainScreenMenu;
+
+    private PlayerModelGetter playerModelGetter;
 
     public void initializeGame(int boardXSize, int boardYSize, int winningConditionSize) {
         gameLogic = new GameLogic(boardXSize, boardYSize, winningConditionSize);
@@ -39,7 +43,8 @@ public class SingleplayerWindow extends GridPane {
         createTiles(gameLogic.getGameBoard(), gameLogic.getBoardXSize(), gameLogic.getBoardYSize());
     }
 
-    public SingleplayerWindow(GridPane mainScreen, VBox mainScreenMenu) {
+    public SingleplayerWindow(GridPane mainScreen, VBox mainScreenMenu, PlayerModelGetter playerModelGetter) {
+        this.playerModelGetter = playerModelGetter;
         this.mainScreen = mainScreen;
         this.mainScreenMenu = mainScreenMenu;
         try {
@@ -63,7 +68,7 @@ public class SingleplayerWindow extends GridPane {
     private void createTiles(ObjectProperty<TileState>[][] gameBoard, int boardXSize, int boardYSize) {
         for (int i = 0; i < boardYSize; i++) {
             for (int j = 0; j < boardXSize; j++) {
-                Tile tile = new Tile(gameBoard[i][j], gameLogic);
+                Tile tile = new Tile(gameBoard[i][j], gameLogic, playerModelGetter);
                 // TODO: alignmenty do ogarnięcia
                 tile.sendPosition(j, i);
                 this.gameBoard.add(tile, j, i);
@@ -79,5 +84,9 @@ public class SingleplayerWindow extends GridPane {
     public void playAgain(ActionEvent actionEvent) {
         gameLogic.getErrorProperty().set("");
         gameLogic.clearGameBoard();
+    }
+
+    public GridPane getGameBoard() {
+        return gameBoard;
     }
 }

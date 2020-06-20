@@ -1,3 +1,14 @@
+.label {
+    -fx-text-fill: #99857B;
+    -fx-effect: dropshadow(gaussian, #FFFFFF, 2, 0.0, 0, 1);
+}
+
+.error-label {
+    -fx-text-fill: #b90c0c;
+    -fx-effect: dropshadow(gaussian, #FFFFFF, 0, 0.0, 0, 0);
+    -fx-font-weight: bold;
+}
+
 .tictactoe {
     -fx-font-smoothing-type: gray;
     -fx-text-fill: #F6FFC8;
@@ -27,3 +38,13 @@ GridPane {
     -fx-background-color: #F6FFC8;
     -fx-effect: dropshadow(gaussian, #B9B9B9, 0, 0.0, 0, 3);
 }
+
+.combo-box {
+    -fx-background-color: #F6FFC8;
+    -fx-effect: dropshadow(gaussian, #B9B9B9, 0, 0.0, 0, 3);
+}
+
+.arrow {
+    -fx-background-color: #B9B9B9;
+}
+

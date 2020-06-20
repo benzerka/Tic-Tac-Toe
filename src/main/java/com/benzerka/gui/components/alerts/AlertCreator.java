@@ -1,6 +1,5 @@
 package com.benzerka.gui.components.alerts;
 
-import com.benzerka.logic.TileState;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
@@ -14,9 +13,12 @@ public class AlertCreator {
     public AlertCreator() {
         alert = new Alert(Alert.AlertType.CONFIRMATION);
     }
+    public AlertCreator(Alert.AlertType alertType) {
+        alert = new Alert(alertType);
+    }
 
     public AlertCreator(String winner) {
-        this();
+        this(Alert.AlertType.CONFIRMATION);
         this.winner = winner;
     }
 
@@ -49,5 +51,12 @@ public class AlertCreator {
 
     public void createLoseAlert() {
         AlertResult userResponse = customizeAlert("You lost.");
+    }
+
+    public void createWarningAlert(String headerText, String contentText) {
+        alert.setTitle("Tic-Tac-Toe Alert");
+        alert.setHeaderText(headerText);
+        alert.setContentText(contentText);
+        alert.showAndWait();
     }
 }

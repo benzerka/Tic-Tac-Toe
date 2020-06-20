@@ -1,10 +1,13 @@
 package com.benzerka.gui.singleplayer;
 
 import com.benzerka.gui.components.GUIEventHandler;
+import com.benzerka.gui.components.PlayerModelGetter;
+import com.benzerka.gui.components.alerts.AlertCreator;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -20,10 +23,7 @@ public class SingleplayerMenuWindow extends GridPane implements Initializable {
     private VBox mainScreenMenu;
     private SingleplayerWindow singleplayerWindow;
     private GUIEventHandler guiEventHandler;
-
-    private int boardXSize;
-    private int boardYSize;
-    private int winningCondition;
+    private PlayerModelGetter playerModelGetter;
 
     @FXML
     private ChoiceBox<String> choiceBox;
@@ -45,67 +45,108 @@ public class SingleplayerMenuWindow extends GridPane implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        // TODO: fix scanning user input and showing alerts
+        errorLabel.getStyleClass().add("error-label");
         choiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             errorLabel.setVisible(false);
-            getGameSizeFromUser(newValue);
+            toggleCustomSettings(newValue);
         });
         boardXSizeTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            int x = scanText(newValue, boardXSizeTextField);
-            if (x != 0) {
-                boardXSize = x;
-            } else {
-                boardXSize = 3;
-            }
+            processNewValue(boardXSizeTextField, newValue);
         });
         boardYSizeTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            int y = scanText(newValue, boardYSizeTextField);
-            if (y != 0) {
-                boardYSize = y;
-            } else {
-                boardYSize = 3;
-            }
+            processNewValue(boardYSizeTextField, newValue);
         });
         winningConditionTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            int winCondition = scanText(newValue, winningConditionTextField);
-            if (winCondition != 0) {
-                this.winningCondition = winCondition;
-            } else {
-                this.winningCondition = 3;
-            }
+            processNewValue(winningConditionTextField, newValue);
         });
     }
 
-    private int scanText(String newValue, TextField textField) {
-        if (!newValue.matches("\\d*")) {
-            textField.setText(newValue.replaceAll("[^\\d]", ""));
-        }
-        String value = textField.getText();
-        if (!value.equals("")) {
-            int x = Integer.valueOf(value);
-            if (x < 2 || x > 20) {
-                errorLabel.setVisible(true);
-            } else {
-                errorLabel.setVisible(false);
-                return x;
-            }
-        }
-        return 0;
+    private int getWinningConditionValue() {
+        return getValueIfNotEmptyElseGetZero(winningConditionTextField);
     }
 
-    public SingleplayerMenuWindow(GridPane mainScreen, VBox mainScreenMenu, SingleplayerWindow singleplayerWindow, GUIEventHandler guiEventHandler) {
+    private int getXValue() {
+        return getValueIfNotEmptyElseGetZero(boardXSizeTextField);
+    }
+
+    private int getYValue() {
+        return getValueIfNotEmptyElseGetZero(boardYSizeTextField);
+    }
+
+    private int getValueIfNotEmptyElseGetZero(TextField textField) {
+        if (textField.getText().equals("")) {
+            return 0;
+        } else {
+            return Integer.valueOf(textField.getText());
+        }
+    }
+
+    private void processNewValue(TextField textField, String newValue) {
+        replaceLettersToNumbers(newValue, textField);
+        errorLabel.setVisible(false);
+        String value = textField.getText();
+        if (!value.equals("")) {
+            int valueAsInt = Integer.valueOf(value);
+            // check if the value is out of bounds
+            if (valueAsInt < 3 || valueAsInt > 20) {
+                if (!errorLabel.getText().equals(incorrectValueText())) {
+                    setErrorLabelText(incorrectValueText());
+                }
+                errorLabel.setVisible(true);
+            }
+        }
+        // check if winning condition number is larger than longer side of game board
+        checkLongerSide();
+    }
+
+    private void replaceLettersToNumbers(String newValue, TextField textField) {
+        // Check if user wrote any letter instead of a number:
+        if (!newValue.matches("\\d*")) {
+            // change that letter into empty space
+            textField.setText(newValue.replaceAll("[^\\d]", ""));
+        }
+    }
+
+    private void checkLongerSide() {
+        // check the longest side of gameBoard, the winning condition cannot be larger this value.
+
+        // get the longer side of game board
+        int longerSide = getLongerSide();
+
+        // if winning condition is larger than longer side
+        if (getWinningConditionValue() > longerSide) {
+            setErrorLabelText("Win condition cannot be larger than: " + longerSide);
+            errorLabel.setVisible(true);
+        }
+    }
+
+    private int getLongerSide() {
+        return (getXValue() >= getYValue()) ? getXValue() : getYValue();
+    }
+
+    private void setErrorLabelText(String text) {
+        errorLabel.setText(text);
+    }
+
+    private String incorrectValueText() {
+        return "Please input the value in correct range.";
+    }
+
+    public SingleplayerMenuWindow(GridPane mainScreen, VBox mainScreenMenu, GUIEventHandler guiEventHandler, PlayerModelGetter playerModelGetter) {
+        this.playerModelGetter = playerModelGetter;
         this.mainScreen = mainScreen;
         this.mainScreenMenu = mainScreenMenu;
-        this.singleplayerWindow = singleplayerWindow;
         this.guiEventHandler = guiEventHandler;
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("SingleplayerMenuRoot.fxml"));
             loader.setRoot(this);
             loader.setController(this);
             loader.load();
+            modifyChoiceBox();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        modifyChoiceBox();
     }
 
     private void modifyChoiceBox() {
@@ -116,40 +157,57 @@ public class SingleplayerMenuWindow extends GridPane implements Initializable {
     }
 
     public void startGame(ActionEvent actionEvent) {
-        singleplayerWindow = new SingleplayerWindow(mainScreen, mainScreenMenu);
-        guiEventHandler.updateSingleplayerWindow(singleplayerWindow);
-        singleplayerWindow.initializeGame(boardXSize, boardYSize, winningCondition);
-        guiEventHandler.addSingleplayerListeners();
-        mainScreen.getChildren().setAll(singleplayerWindow);
-    }
-
-    private void getGameSizeFromUser(String newValue) {
-        switch (newValue) {
+        singleplayerWindow = new SingleplayerWindow(mainScreen, mainScreenMenu, playerModelGetter);
+        switch (choiceBox.getValue()) {
             case "Tic-Tac-Toe":
                 customSettings.setDisable(true);
-                setGameBoardSize(3, 3, 3);
+                singleplayerWindow.initializeGame(3, 3, 3);
                 break;
             case "Gomoku":
                 customSettings.setDisable(true);
-                setGameBoardSize(15, 15, 5);
+                singleplayerWindow.initializeGame(15, 15, 5);
                 break;
             case "Custom":
                 customSettings.setDisable(false);
-                if (!boardXSizeTextField.getText().equals("") || !boardYSizeTextField.getText().equals("") || !winningConditionTextField.getText().equals("")) {
-                    setGameBoardSize(Integer.valueOf(boardXSizeTextField.getText()), Integer.valueOf(boardYSizeTextField.getText()), Integer.valueOf(winningConditionTextField.getText()));
+                if (areValuesCorrect()) {
+                    singleplayerWindow.initializeGame(getXValue(), getYValue(), getWinningConditionValue());
+                } else {
+                    AlertCreator alertCreator = new AlertCreator(Alert.AlertType.WARNING);
+                    alertCreator.createWarningAlert("Invalid value provided.", "Values must be in range of 3 to 20. Winning condition cannot exceed the longer side.");
+                    return;
                 }
                 break;
         }
+        guiEventHandler.updateSingleplayerWindow(singleplayerWindow);
+        guiEventHandler.addSingleplayerListeners();
+        mainScreen.getChildren().setAll(singleplayerWindow);
+        clearTextFieldValues();
     }
 
-    private void setGameBoardSize(int boardXSize, int boardYSize, int winningCondition) {
-        this.boardXSize = boardXSize;
-        this.boardYSize = boardYSize;
-        this.winningCondition = winningCondition;
+    private boolean areValuesCorrect() {
+        return (checkIfFieldMatchesRange(getXValue()) && checkIfFieldMatchesRange(getYValue()) && checkIfFieldMatchesRange(getWinningConditionValue()) && !checkIfWinningConditionIsLongerThanLongerSide());
+    }
+
+    private boolean checkIfWinningConditionIsLongerThanLongerSide() {
+        int longerSide = getLongerSide();
+        return getWinningConditionValue() > longerSide;
+    }
+
+    private boolean checkIfFieldMatchesRange(int value) {
+        return (value >= 3 && value <= 20);
+    }
+
+    private void clearTextFieldValues() {
+        boardXSizeTextField.setText("");
+        boardYSizeTextField.setText("");
+        winningConditionTextField.setText("");
+    }
+
+    private void toggleCustomSettings(String newValue) {
+        customSettings.setDisable(!newValue.equals("Custom"));
     }
 
     public void goBack(ActionEvent actionEvent) {
         mainScreen.getChildren().setAll(mainScreenMenu);
-
     }
 }

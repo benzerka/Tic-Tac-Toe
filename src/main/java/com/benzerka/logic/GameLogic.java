@@ -1,5 +1,7 @@
 package com.benzerka.logic;
 
+import com.benzerka.logic.events.TieListener;
+import com.benzerka.logic.events.WinListener;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -13,27 +15,28 @@ public class GameLogic {
 
     private int boardXSize;
     private int boardYSize;
-    private int winningConditionSize;
-    private ObjectProperty<TileState> currentPlayerProperty;
-    private StringProperty errorProperty;
-    private List<Runnable> tieListeners = new ArrayList<>();
-    private List<Runnable> winListeners = new ArrayList<>();
 
+    private int winningConditionSize;
+
+    private ObjectProperty<Turn> currentPlayerProperty;
+    private StringProperty errorProperty;
+    private List<TieListener> tieListeners = new ArrayList<>();
+    private List<WinListener> winListeners = new ArrayList<>();
     private String winner;
+    private int totalLeftRightElements;
+    private int totalAboveDownElements;
+    private int totalUpperLeftDownRightDiagonalElements;
+    private int totalUpperRightDownLeftDiagonalElements;
 
     @SuppressWarnings("unchecked")
     public GameLogic(int boardXSize, int boardYSize, int winningConditionSize) {
         gameBoard = new SimpleObjectProperty[boardYSize][boardXSize];
-        currentPlayerProperty = new SimpleObjectProperty<>(getFirstPlayer());
+        currentPlayerProperty = new SimpleObjectProperty<>(Turn.PLAYER1);
         errorProperty = new SimpleStringProperty("");
         this.boardXSize = boardXSize;
         this.boardYSize = boardYSize;
         this.winningConditionSize = winningConditionSize;
         initiateGameBoard();
-    }
-
-    private TileState getFirstPlayer() {
-        return TileState.CIRCLE;
     }
 
     private void initiateGameBoard() {
@@ -53,32 +56,55 @@ public class GameLogic {
     }
 
     public void checkWinningCondition(TileState type, int x, int y) {
-        int totalLeftRightElements = 1 + checkLeftTiles(type, x, y) + checkRightTiles(type, x, y);
-        int totalAboveDownElements = 1 + checkTilesAbove(type, x, y) + checkTilesBelow(type, x, y);
-        int totalUpperLeftDownRightDiagonalElements = 1 + checkUpperLeftDiagonalTiles(type, x, y) + checkDownRightDiagonalTiles(type, x, y);
-        int totalUpperRightDownLeftDiagonalElements = 1 + checkUpperRightDiagonalTiles(type, x, y) + checkDownLeftDiagonalTiles(type, x, y);
-        if (totalLeftRightElements >= winningConditionSize ||
-                totalAboveDownElements >= winningConditionSize ||
-                totalUpperLeftDownRightDiagonalElements >= winningConditionSize ||
-                totalUpperRightDownLeftDiagonalElements >= winningConditionSize) {
-            handleWin();
+        int leftelements = checkLeftTiles(type, x, y);
+        int rightelements = checkRightTiles(type, x, y);
+        totalLeftRightElements = 1 + leftelements + rightelements;
+
+        int upelements = checkTilesAbove(type, x, y);
+        int downelements = checkTilesBelow(type, x, y);
+        totalAboveDownElements = 1 + upelements + downelements;
+
+        int upperleftelements = checkUpperLeftDiagonalTiles(type, x, y);
+        int downrightelements = checkDownRightDiagonalTiles(type, x, y);
+        totalUpperLeftDownRightDiagonalElements = 1 + upperleftelements + downrightelements;
+
+        int upperrightelements = checkUpperRightDiagonalTiles(type, x, y);
+        int downleftelements = checkDownLeftDiagonalTiles(type, x, y);
+        totalUpperRightDownLeftDiagonalElements = 1 + upperrightelements + downleftelements;
+
+        if (totalLeftRightElements >= winningConditionSize) {
+            handleWin(x - leftelements, x + rightelements, y, y, WinConditionType.HORIZONTAL);
+        } else if (totalAboveDownElements >= winningConditionSize) {
+            handleWin(x, x, y - upelements, y + downelements, WinConditionType.VERTICAL);
+        } else if (totalUpperLeftDownRightDiagonalElements >= winningConditionSize) {
+            handleWin(x - upperleftelements, x + downrightelements, y - upperleftelements, y + downrightelements, WinConditionType.DIAGONAL_UPPER_LEFT_DOWN_RIGHT);
+        } else if (totalUpperRightDownLeftDiagonalElements >= winningConditionSize) {
+            handleWin(x + upperrightelements, x - downleftelements, y - upperrightelements, y + downleftelements, WinConditionType.DIAGONAL_UPPER_RIGHT_DOWN_LEFT);
         } else {
             handleTie();
         }
     }
 
-    public void addTieListener(Runnable listener) {
-        this.tieListeners.add(listener);
+    private void handleWin(int startX, int endX, int startY, int endY, WinConditionType type) {
+        setWinner();
+        errorProperty.set(winner + " won!");
+        this.winListeners.forEach((winListener) -> {
+            winListener.handleWin(startX, endX, startY, endY, type);
+        });
     }
 
-    public void addWinListener(Runnable listener) {
-        this.winListeners.add(listener);
+    public void addTieListener(TieListener tieListener) {
+        this.tieListeners.add(tieListener);
+    }
+
+    public void addWinListener(WinListener winListener) {
+        this.winListeners.add(winListener);
     }
 
     private void handleTie() {
         if (isTie()) {
             errorProperty.set("There is a tie!");
-            this.tieListeners.forEach(Runnable::run);
+            this.tieListeners.forEach(TieListener::handleTie);
         }
     }
 
@@ -92,12 +118,6 @@ public class GameLogic {
             }
         }
         return counter == (boardXSize * boardYSize);
-    }
-
-    private void handleWin() {
-        setWinner();
-        errorProperty.set(winner + " won!");
-        this.winListeners.forEach(Runnable::run);
     }
 
     private int checkLeftTiles(TileState type, int x, int y) {
@@ -191,13 +211,7 @@ public class GameLogic {
     }
 
     public void switchTurn() {
-        if (currentPlayerProperty.get() == TileState.CROSS) {
-            currentPlayerProperty.set(TileState.CIRCLE);
-        } else if (currentPlayerProperty.get() == TileState.CIRCLE) {
-            currentPlayerProperty.set(TileState.CROSS);
-        } else {
-            currentPlayerProperty.set(TileState.EMPTY);
-        }
+        currentPlayerProperty.set((currentPlayerProperty.get() == Turn.PLAYER1) ? Turn.PLAYER2 : Turn.PLAYER1);
     }
 
     public ObjectProperty<TileState>[][] getGameBoard() {
@@ -212,11 +226,11 @@ public class GameLogic {
         return boardYSize;
     }
 
-    public TileState getCurrentPlayer() {
+    public Turn getCurrentPlayer() {
         return currentPlayerProperty.get();
     }
 
-    public ObjectProperty<TileState> getCurrentPlayerProperty() {
+    public ObjectProperty<Turn> getCurrentPlayerProperty() {
         return currentPlayerProperty;
     }
 
@@ -233,32 +247,20 @@ public class GameLogic {
     }
 
     public void resetPlayer() {
-        currentPlayerProperty.setValue(getFirstPlayer());
+        currentPlayerProperty.setValue(Turn.PLAYER1);
     }
 
     public String getWinner() {
         return winner;
     }
 
-    public void setWinner() {
-        TileState firstPlayer = getFirstPlayer();
+    private void setWinner() {
         switch (currentPlayerProperty.get()) {
-            case CROSS:
-                if (firstPlayer == TileState.CROSS) {
-                    winner = "Player 1";
-                } else if (firstPlayer == TileState.CIRCLE) {
-                    winner = "Player 2";
-                }
+            case PLAYER1:
+                winner = "Player 1";
                 break;
-            case CIRCLE:
-                if (firstPlayer == TileState.CIRCLE) {
-                    winner = "Player 1";
-                } else if (firstPlayer == TileState.CROSS) {
-                    winner = "Player 2";
-                }
-                break;
-            default:
-                winner = "Unknown";
+            case PLAYER2:
+                winner = "Player 2";
                 break;
         }
     }

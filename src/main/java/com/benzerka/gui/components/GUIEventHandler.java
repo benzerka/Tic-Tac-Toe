@@ -14,16 +14,16 @@ public class GUIEventHandler {
     private SingleplayerWindow singleplayerWindow;
     private SingleplayerMenuWindow singleplayerMenuWindow;
     private MultiplayerWindow multiplayerWindow;
-
     private MultiplayerMenuWindow multiplayerMenuWindow;
-
     private OptionsWindow optionsWindow;
+    private PlayerModelGetter playerModelGetter;
+
     public GUIEventHandler(GridPane mainScreen, VBox mainScreenMenu) {
-        singleplayerWindow = new SingleplayerWindow(mainScreen, mainScreenMenu);
+        playerModelGetter = new PlayerModelGetter();
         multiplayerWindow = new MultiplayerWindow(mainScreen, mainScreenMenu);
-        optionsWindow = new OptionsWindow(mainScreen, mainScreenMenu);
+        optionsWindow = new OptionsWindow(mainScreen, mainScreenMenu, playerModelGetter);
         addMultiplayerListeners();
-        singleplayerMenuWindow = new SingleplayerMenuWindow(mainScreen, mainScreenMenu, singleplayerWindow, this);
+        singleplayerMenuWindow = new SingleplayerMenuWindow(mainScreen, mainScreenMenu, this, playerModelGetter);
         multiplayerMenuWindow = new MultiplayerMenuWindow(mainScreen, mainScreenMenu, multiplayerWindow);
     }
 
@@ -46,22 +46,23 @@ public class GUIEventHandler {
         // in case of a tie
         singleplayerWindow.getGameLogic().addTieListener(() -> {
             AlertResult alertResult = new AlertCreator().createTieAlert();
-            handleSingleplayerTie(alertResult);
+            GUIEventHandler.this.handleSingleplayerTie(alertResult);
             singleplayerWindow.getGameLogic().getErrorProperty().set("");
         });
         // in case of a win
-        singleplayerWindow.getGameLogic().addWinListener(() -> {
+        singleplayerWindow.getGameLogic().addWinListener((startX, endX, startY, endY, type) -> {
+            LineCreator lineCreator = new LineCreator();
+            lineCreator.sendGameBoard(singleplayerWindow.getGameBoard());
+            lineCreator.sendTileXPosition(startX, endX);
+            lineCreator.sendTileYPosition(startY, endY);
+            lineCreator.setType(type);
+            lineCreator.drawWinLine();
             String winner = singleplayerWindow.getGameLogic().getWinner();
-            //draw a line across the winning elements?
-            drawWinLine();
             AlertResult alertResult = new AlertCreator(winner).createWinAlert();
-            handleSingleplayerWin(alertResult);
+            GUIEventHandler.this.handleSingleplayerWin(alertResult);
             singleplayerWindow.getGameLogic().getErrorProperty().set("");
+            lineCreator.clearLines();
         });
-    }
-
-    private void drawWinLine() {
-
     }
 
     private void handleSingleplayerWin(AlertResult alertResult) {
@@ -104,5 +105,4 @@ public class GUIEventHandler {
     public OptionsWindow getOptionsWindow() {
         return optionsWindow;
     }
-
 }

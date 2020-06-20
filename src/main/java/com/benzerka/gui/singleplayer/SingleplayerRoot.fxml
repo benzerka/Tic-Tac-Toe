@@ -9,35 +9,71 @@
 
 <fx:root type="GridPane" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
     <columnConstraints>
-        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0"/>
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="35.0" vgrow="SOMETIMES" />
-        <RowConstraints minHeight="10.0" vgrow="ALWAYS" />
+        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="35.0" vgrow="SOMETIMES"/>
+        <RowConstraints minHeight="10.0" vgrow="ALWAYS"/>
     </rowConstraints>
     <children>
-        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0" GridPane.hgrow="ALWAYS" GridPane.vgrow="SOMETIMES">
+        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0" GridPane.hgrow="ALWAYS"
+              GridPane.vgrow="SOMETIMES">
             <children>
                 <Label fx:id="player" text="Player" HBox.hgrow="SOMETIMES">
                     <graphic>
-                        <Label text="Turn:" />
+                        <Label text="Turn:"/>
                     </graphic>
                 </Label>
-                <Label fx:id="errorLabel" minWidth="150.0" textFill="#ff0909" HBox.hgrow="SOMETIMES" />
-            <Button mnemonicParsing="false" onAction="#playAgain" text="Start Over" HBox.hgrow="SOMETIMES" />
-            <Button mnemonicParsing="false" onAction="#returnToMainScreen" text="Go Back" HBox.hgrow="SOMETIMES" />
+                <Label fx:id="errorLabel" minWidth="150.0" textFill="#ff0909" HBox.hgrow="SOMETIMES"/>
+                <Button mnemonicParsing="false" onAction="#playAgain" text="Start Over" HBox.hgrow="SOMETIMES"/>
+                <Button mnemonicParsing="false" onAction="#returnToMainScreen" text="Go Back" HBox.hgrow="SOMETIMES"/>
             </children>
         </HBox>
-        <GridPane fx:id="gameBoard" alignment="CENTER" prefHeight="400.0" prefWidth="600.0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
+        <GridPane fx:id="gameBoard" alignment="CENTER" prefHeight="400.0" prefWidth="600.0" GridPane.hgrow="ALWAYS"
+                  GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
             <rowConstraints>
-                <RowConstraints maxHeight="1.7976931348623157E308" minHeight="0.0" valignment="CENTER" />
-                <RowConstraints maxHeight="1.7976931348623157E308" minHeight="0.0" valignment="CENTER" />
-                <RowConstraints maxHeight="1.7976931348623157E308" minHeight="0.0" valignment="CENTER" />
+                <RowConstraints maxHeight="1.7976931348623157E308" minHeight="0.0" valignment="CENTER"/>
+                <RowConstraints maxHeight="1.7976931348623157E308" minHeight="0.0" valignment="CENTER"/>
+                <RowConstraints maxHeight="1.7976931348623157E308" minHeight="0.0" valignment="CENTER"/>
+                <RowConstraints maxHeight="1.7976931348623157E308" minHeight="0.0" valignment="CENTER"/>
+                <RowConstraints maxHeight="1.7976931348623157E308" minHeight="0.0" valignment="CENTER"/>
+                <RowConstraints maxHeight="1.7976931348623157E308" minHeight="0.0" valignment="CENTER"/>
+                <RowConstraints maxHeight="1.7976931348623157E308" minHeight="0.0" valignment="CENTER"/>
+                <RowConstraints maxHeight="1.7976931348623157E308" minHeight="0.0" valignment="CENTER"/>
+                <RowConstraints maxHeight="1.7976931348623157E308" minHeight="0.0" valignment="CENTER"/>
+                <RowConstraints maxHeight="1.7976931348623157E308" minHeight="0.0" valignment="CENTER"/>
+                <RowConstraints maxHeight="1.7976931348623157E308" minHeight="0.0" valignment="CENTER"/>
+                <RowConstraints maxHeight="1.7976931348623157E308" minHeight="0.0" valignment="CENTER"/>
+                <RowConstraints maxHeight="1.7976931348623157E308" minHeight="0.0" valignment="CENTER"/>
+                <RowConstraints maxHeight="1.7976931348623157E308" minHeight="0.0" valignment="CENTER"/>
+                <RowConstraints maxHeight="1.7976931348623157E308" minHeight="0.0" valignment="CENTER"/>
+                <RowConstraints maxHeight="1.7976931348623157E308" minHeight="0.0" valignment="CENTER"/>
+                <RowConstraints maxHeight="1.7976931348623157E308" minHeight="0.0" valignment="CENTER"/>
+                <RowConstraints maxHeight="1.7976931348623157E308" minHeight="0.0" valignment="CENTER"/>
+                <RowConstraints maxHeight="1.7976931348623157E308" minHeight="0.0" valignment="CENTER"/>
+                <RowConstraints maxHeight="1.7976931348623157E308" minHeight="0.0" valignment="CENTER"/>
             </rowConstraints>
             <columnConstraints>
-                <ColumnConstraints halignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="0.0" />
-                <ColumnConstraints halignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="0.0" />
-                <ColumnConstraints halignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="0.0" />
+                <ColumnConstraints halignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="0.0"/>
+                <ColumnConstraints halignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="0.0"/>
+                <ColumnConstraints halignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="0.0"/>
+                <ColumnConstraints halignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="0.0"/>
+                <ColumnConstraints halignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="0.0"/>
+                <ColumnConstraints halignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="0.0"/>
+                <ColumnConstraints halignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="0.0"/>
+                <ColumnConstraints halignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="0.0"/>
+                <ColumnConstraints halignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="0.0"/>
+                <ColumnConstraints halignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="0.0"/>
+                <ColumnConstraints halignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="0.0"/>
+                <ColumnConstraints halignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="0.0"/>
+                <ColumnConstraints halignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="0.0"/>
+                <ColumnConstraints halignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="0.0"/>
+                <ColumnConstraints halignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="0.0"/>
+                <ColumnConstraints halignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="0.0"/>
+                <ColumnConstraints halignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="0.0"/>
+                <ColumnConstraints halignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="0.0"/>
+                <ColumnConstraints halignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="0.0"/>
+                <ColumnConstraints halignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="0.0"/>
             </columnConstraints>
         </GridPane>
     </children>
