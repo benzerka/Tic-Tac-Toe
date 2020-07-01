@@ -1,5 +1,6 @@
 package com.benzerka.gui.singleplayer;
 
+import com.benzerka.gui.components.PlayableWindow;
 import com.benzerka.gui.components.PlayerModelGetter;
 import com.benzerka.gui.components.tile.Tile;
 import com.benzerka.logic.GameLogic;
@@ -11,10 +12,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import lombok.Getter;
 
 import java.io.IOException;
 
-public class SingleplayerWindow extends GridPane {
+@Getter
+public class SingleplayerWindow extends GridPane implements PlayableWindow {
     @FXML
     private GridPane gameBoard;
 
@@ -24,9 +27,9 @@ public class SingleplayerWindow extends GridPane {
     @FXML
     public Label errorLabel;
 
-    public GameLogic getGameLogic() {
-        return gameLogic;
-    }
+//    public GameLogic getGameLogic() {
+//        return gameLogic;
+//    }
 
     private GameLogic gameLogic;
 
@@ -55,21 +58,13 @@ public class SingleplayerWindow extends GridPane {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public GridPane getMainScreen() {
-        return mainScreen;
-    }
-
-    public VBox getMainScreenMenu() {
-        return mainScreenMenu;
+        errorLabel.getStyleClass().add("error-label");
     }
 
     private void createTiles(ObjectProperty<TileState>[][] gameBoard, int boardXSize, int boardYSize) {
         for (int i = 0; i < boardYSize; i++) {
             for (int j = 0; j < boardXSize; j++) {
                 Tile tile = new Tile(gameBoard[i][j], gameLogic, playerModelGetter);
-                // TODO: alignmenty do ogarnięcia
                 tile.sendPosition(j, i);
                 this.gameBoard.add(tile, j, i);
             }
@@ -84,9 +79,5 @@ public class SingleplayerWindow extends GridPane {
     public void playAgain(ActionEvent actionEvent) {
         gameLogic.getErrorProperty().set("");
         gameLogic.clearGameBoard();
-    }
-
-    public GridPane getGameBoard() {
-        return gameBoard;
     }
 }

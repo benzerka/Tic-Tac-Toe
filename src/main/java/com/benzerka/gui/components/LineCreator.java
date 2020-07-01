@@ -23,6 +23,9 @@ public class LineCreator {
     private int gameBoardEndY;
     private Line winLine;
 
+    public LineCreator(GridPane gameBoard) {
+        this.gameBoard = gameBoard;
+    }
 
     public void sendTileXPosition(int tileStartX, int tileEndX) {
         this.tileStartX = tileStartX;
@@ -109,10 +112,6 @@ public class LineCreator {
                 gameBoard.add(winLine, tileEndX, tileStartY, tileStartX - tileEndX + 1, tileEndY - tileStartY + 1);
                 break;
         }
-    }
-
-    public void sendGameBoard(GridPane gameBoard) {
-        this.gameBoard = gameBoard;
     }
 
     public void clearLines() {

@@ -45,7 +45,6 @@ public class SingleplayerMenuWindow extends GridPane implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // TODO: fix scanning user input and showing alerts
         errorLabel.getStyleClass().add("error-label");
         choiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             errorLabel.setVisible(false);
@@ -60,26 +59,6 @@ public class SingleplayerMenuWindow extends GridPane implements Initializable {
         winningConditionTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             processNewValue(winningConditionTextField, newValue);
         });
-    }
-
-    private int getWinningConditionValue() {
-        return getValueIfNotEmptyElseGetZero(winningConditionTextField);
-    }
-
-    private int getXValue() {
-        return getValueIfNotEmptyElseGetZero(boardXSizeTextField);
-    }
-
-    private int getYValue() {
-        return getValueIfNotEmptyElseGetZero(boardYSizeTextField);
-    }
-
-    private int getValueIfNotEmptyElseGetZero(TextField textField) {
-        if (textField.getText().equals("")) {
-            return 0;
-        } else {
-            return Integer.valueOf(textField.getText());
-        }
     }
 
     private void processNewValue(TextField textField, String newValue) {
@@ -121,8 +100,24 @@ public class SingleplayerMenuWindow extends GridPane implements Initializable {
         }
     }
 
-    private int getLongerSide() {
-        return (getXValue() >= getYValue()) ? getXValue() : getYValue();
+    private int getWinningConditionValue() {
+        return getValueIfNotEmptyElseGetZero(winningConditionTextField);
+    }
+
+    private int getXValue() {
+        return getValueIfNotEmptyElseGetZero(boardXSizeTextField);
+    }
+
+    private int getYValue() {
+        return getValueIfNotEmptyElseGetZero(boardYSizeTextField);
+    }
+
+    private int getValueIfNotEmptyElseGetZero(TextField textField) {
+        if (textField.getText().equals("")) {
+            return 0;
+        } else {
+            return Integer.valueOf(textField.getText());
+        }
     }
 
     private void setErrorLabelText(String text) {
@@ -160,15 +155,12 @@ public class SingleplayerMenuWindow extends GridPane implements Initializable {
         singleplayerWindow = new SingleplayerWindow(mainScreen, mainScreenMenu, playerModelGetter);
         switch (choiceBox.getValue()) {
             case "Tic-Tac-Toe":
-                customSettings.setDisable(true);
                 singleplayerWindow.initializeGame(3, 3, 3);
                 break;
             case "Gomoku":
-                customSettings.setDisable(true);
                 singleplayerWindow.initializeGame(15, 15, 5);
                 break;
             case "Custom":
-                customSettings.setDisable(false);
                 if (areValuesCorrect()) {
                     singleplayerWindow.initializeGame(getXValue(), getYValue(), getWinningConditionValue());
                 } else {
@@ -178,7 +170,7 @@ public class SingleplayerMenuWindow extends GridPane implements Initializable {
                 }
                 break;
         }
-        guiEventHandler.updateSingleplayerWindow(singleplayerWindow);
+        guiEventHandler.getSingleplayerWindow(singleplayerWindow);
         guiEventHandler.addSingleplayerListeners();
         mainScreen.getChildren().setAll(singleplayerWindow);
         clearTextFieldValues();
@@ -188,13 +180,17 @@ public class SingleplayerMenuWindow extends GridPane implements Initializable {
         return (checkIfFieldMatchesRange(getXValue()) && checkIfFieldMatchesRange(getYValue()) && checkIfFieldMatchesRange(getWinningConditionValue()) && !checkIfWinningConditionIsLongerThanLongerSide());
     }
 
+    private boolean checkIfFieldMatchesRange(int value) {
+        return (value >= 3 && value <= 20);
+    }
+
     private boolean checkIfWinningConditionIsLongerThanLongerSide() {
         int longerSide = getLongerSide();
         return getWinningConditionValue() > longerSide;
     }
 
-    private boolean checkIfFieldMatchesRange(int value) {
-        return (value >= 3 && value <= 20);
+    private int getLongerSide() {
+        return (getXValue() >= getYValue()) ? getXValue() : getYValue();
     }
 
     private void clearTextFieldValues() {

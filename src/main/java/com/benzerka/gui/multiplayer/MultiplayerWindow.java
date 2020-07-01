@@ -1,13 +1,17 @@
 package com.benzerka.gui.multiplayer;
 
+import com.benzerka.gui.components.PlayableWindow;
+import com.benzerka.logic.GameLogic;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import lombok.Getter;
 
 import java.io.IOException;
 
-public class MultiplayerWindow extends GridPane {
+@Getter
+public class MultiplayerWindow extends GridPane implements PlayableWindow {
     private GridPane mainScreen;
     private VBox mainScreenMenu;
 
@@ -26,5 +30,15 @@ public class MultiplayerWindow extends GridPane {
 
     public void returnToMainScreen(ActionEvent actionEvent) {
         mainScreen.getChildren().setAll(mainScreenMenu);
+    }
+
+    @Override
+    public GameLogic getGameLogic() {
+        return null;
+    }
+
+    @Override
+    public GridPane getGameBoard() {
+        return null;
     }
 }

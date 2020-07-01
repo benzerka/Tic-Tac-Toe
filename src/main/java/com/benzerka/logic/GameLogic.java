@@ -6,10 +6,13 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 public class GameLogic {
     private ObjectProperty<TileState>[][] gameBoard;
 
@@ -23,10 +26,6 @@ public class GameLogic {
     private List<TieListener> tieListeners = new ArrayList<>();
     private List<WinListener> winListeners = new ArrayList<>();
     private String winner;
-    private int totalLeftRightElements;
-    private int totalAboveDownElements;
-    private int totalUpperLeftDownRightDiagonalElements;
-    private int totalUpperRightDownLeftDiagonalElements;
 
     @SuppressWarnings("unchecked")
     public GameLogic(int boardXSize, int boardYSize, int winningConditionSize) {
@@ -58,19 +57,19 @@ public class GameLogic {
     public void checkWinningCondition(TileState type, int x, int y) {
         int leftelements = checkLeftTiles(type, x, y);
         int rightelements = checkRightTiles(type, x, y);
-        totalLeftRightElements = 1 + leftelements + rightelements;
+        int totalLeftRightElements = 1 + leftelements + rightelements;
 
         int upelements = checkTilesAbove(type, x, y);
         int downelements = checkTilesBelow(type, x, y);
-        totalAboveDownElements = 1 + upelements + downelements;
+        int totalAboveDownElements = 1 + upelements + downelements;
 
         int upperleftelements = checkUpperLeftDiagonalTiles(type, x, y);
         int downrightelements = checkDownRightDiagonalTiles(type, x, y);
-        totalUpperLeftDownRightDiagonalElements = 1 + upperleftelements + downrightelements;
+        int totalUpperLeftDownRightDiagonalElements = 1 + upperleftelements + downrightelements;
 
         int upperrightelements = checkUpperRightDiagonalTiles(type, x, y);
         int downleftelements = checkDownLeftDiagonalTiles(type, x, y);
-        totalUpperRightDownLeftDiagonalElements = 1 + upperrightelements + downleftelements;
+        int totalUpperRightDownLeftDiagonalElements = 1 + upperrightelements + downleftelements;
 
         if (totalLeftRightElements >= winningConditionSize) {
             handleWin(x - leftelements, x + rightelements, y, y, WinConditionType.HORIZONTAL);
@@ -87,7 +86,6 @@ public class GameLogic {
 
     private void handleWin(int startX, int endX, int startY, int endY, WinConditionType type) {
         setWinner();
-        errorProperty.set(winner + " won!");
         this.winListeners.forEach((winListener) -> {
             winListener.handleWin(startX, endX, startY, endY, type);
         });
@@ -103,7 +101,6 @@ public class GameLogic {
 
     private void handleTie() {
         if (isTie()) {
-            errorProperty.set("There is a tie!");
             this.tieListeners.forEach(TieListener::handleTie);
         }
     }
@@ -214,44 +211,16 @@ public class GameLogic {
         currentPlayerProperty.set((currentPlayerProperty.get() == Turn.PLAYER1) ? Turn.PLAYER2 : Turn.PLAYER1);
     }
 
-    public ObjectProperty<TileState>[][] getGameBoard() {
-        return gameBoard;
-    }
-
-    public int getBoardXSize() {
-        return boardXSize;
-    }
-
-    public int getBoardYSize() {
-        return boardYSize;
-    }
-
-    public Turn getCurrentPlayer() {
-        return currentPlayerProperty.get();
-    }
-
-    public ObjectProperty<Turn> getCurrentPlayerProperty() {
-        return currentPlayerProperty;
-    }
-
-    public StringProperty getErrorProperty() {
-        return errorProperty;
-    }
-
     public void clearError() {
         errorProperty.set("");
-    }
-
-    public void setError(String error) {
-        errorProperty.set(error);
     }
 
     public void resetPlayer() {
         currentPlayerProperty.setValue(Turn.PLAYER1);
     }
 
-    public String getWinner() {
-        return winner;
+    public void setErrorProperty(String error) {
+        errorProperty.set(error);
     }
 
     private void setWinner() {

@@ -21,7 +21,8 @@
     <children>
         <Label text="Before Multiplayer Window" GridPane.columnIndex="1"/>
         <Label text="Multiplayer MENU Window"/>
-        <Button mnemonicParsing="false" onAction="#startGame" text="Start Game" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+        <Button mnemonicParsing="false" onAction="#startGame" text="Start Game" GridPane.columnIndex="1"
+                GridPane.rowIndex="2"/>
         <Button mnemonicParsing="false" onAction="#goBack" text="Go Back" GridPane.rowIndex="2"/>
     </children>
 </fx:root>

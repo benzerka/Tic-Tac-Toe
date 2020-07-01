@@ -2,7 +2,6 @@ package com.benzerka.gui.options;
 
 import com.benzerka.gui.components.PlayerModelGetter;
 import com.benzerka.logic.TileState;
-import com.benzerka.logic.events.ElementListener;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -24,7 +23,6 @@ public class OptionsWindow extends GridPane {
     private GridPane mainScreen;
     private VBox mainScreenMenu;
     private PlayerModelGetter playerModelGetter;
-    private List<ElementListener> elementListeners = new ArrayList<>();
     private TileState possiblePlayerOneTileState;
     private TileState possiblePlayerTwoTileState;
     private boolean isPlayerOneFlaggedForChange;
@@ -61,8 +59,6 @@ public class OptionsWindow extends GridPane {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        // TODO: dodać zmianę kolorów elementów
 
         singleplayerErrorLabel.getStyleClass().add("error-label");
         multiplayerErrorLabel.getStyleClass().add("error-label");
@@ -134,6 +130,8 @@ public class OptionsWindow extends GridPane {
         comboBoxItemsList.add(TileState.CROSS);
         comboBoxItemsList.add(TileState.TRIANGLE);
         comboBoxItemsList.add(TileState.STAR);
+        comboBoxItemsList.add(TileState.PENTAGON);
+        comboBoxItemsList.add(TileState.DIAMOND);
         return FXCollections.observableList(comboBoxItemsList);
     }
 
@@ -163,10 +161,6 @@ public class OptionsWindow extends GridPane {
 
     public void returnToMainScreen(ActionEvent actionEvent) {
         mainScreen.getChildren().setAll(mainScreenMenu);
-    }
-
-    public void addElementListener(ElementListener elementListener) {
-        this.elementListeners.add(elementListener);
     }
 
 }

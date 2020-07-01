@@ -10,7 +10,6 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Paint;
 
 import java.io.IOException;
 
@@ -23,6 +22,8 @@ public class Tile extends GridPane {
     private Pane ellipsePane;
     private Pane trianglePane;
     private Pane starPane;
+    private Pane diamondPane;
+    private Pane pentagonPane;
     private int currentXPosition;
     private int currentYPosition;
 
@@ -50,11 +51,19 @@ public class Tile extends GridPane {
             } else if (newValue == TileState.STAR) {
                 starPane.setVisible(true);
                 checkForWinCondition(newValue);
+            } else if (newValue == TileState.PENTAGON) {
+                pentagonPane.setVisible(true);
+                checkForWinCondition(newValue);
+            } else if (newValue == TileState.DIAMOND) {
+                diamondPane.setVisible(true);
+                checkForWinCondition(newValue);
             } else if (newValue == TileState.EMPTY) {
                 ellipsePane.setVisible(false);
                 crossPane.setVisible(false);
                 trianglePane.setVisible(false);
                 starPane.setVisible(false);
+                diamondPane.setVisible(false);
+                pentagonPane.setVisible(false);
                 tileController.getGameLogic().resetPlayer();
             }
             emptyPane.setVisible(false);
@@ -72,7 +81,8 @@ public class Tile extends GridPane {
             ellipsePane = tileController.getEllipsePane();
             trianglePane = tileController.getTrianglePane();
             starPane = tileController.getStarPane();
-            tileController.bindShapes();
+            diamondPane = tileController.getDiamondPane();
+            pentagonPane = tileController.getPentagonPane();
         } catch (IOException e) {
             e.printStackTrace();
         }

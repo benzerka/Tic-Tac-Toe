@@ -10,55 +10,125 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.shape.Polygon?>
 
-<GridPane alignment="CENTER" onMouseClicked="#onClick" stylesheets="@Tile.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
+<GridPane alignment="CENTER" onMouseClicked="#onClick" stylesheets="@Tile.css" xmlns="http://javafx.com/javafx/8.0.121"
+          xmlns:fx="http://javafx.com/fxml/1">
     <columnConstraints>
-        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0"/>
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints minHeight="10.0" vgrow="ALWAYS" />
+        <RowConstraints minHeight="10.0" vgrow="ALWAYS"/>
     </rowConstraints>
     <children>
-        <Pane fx:id="crossPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="100.0" visible="false" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+        <Pane fx:id="crossPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0"
+              minWidth="0.0" prefHeight="100.0" prefWidth="100.0" visible="false" GridPane.hgrow="ALWAYS"
+              GridPane.vgrow="ALWAYS">
             <children>
-                <Line fx:id="line1" endX="100.0" startY="100.0" stroke="#ff1100" strokeWidth="3.0" />
-                <Line fx:id="line2" endX="100.0" endY="100.0" stroke="#ff1100" strokeWidth="3.0" />
+                <Line fx:id="line1" endX="100.0" startY="100.0" stroke="#ff1100" strokeWidth="3.0"/>
+                <Line fx:id="line2" endX="100.0" endY="100.0" stroke="#ff1100" strokeWidth="3.0"/>
             </children>
         </Pane>
-        <Pane fx:id="ellipsePane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="100.0" visible="false" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+        <Pane fx:id="ellipsePane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0"
+              minWidth="0.0" prefHeight="100.0" prefWidth="100.0" visible="false" GridPane.hgrow="ALWAYS"
+              GridPane.vgrow="ALWAYS">
             <children>
-                <Ellipse fx:id="ellipse" centerX="50.0" centerY="50.0" fill="TRANSPARENT" radiusX="50.0" radiusY="50.0" stroke="#0026ff" strokeType="INSIDE" strokeWidth="3.0" />
+                <Ellipse fx:id="ellipse" centerX="50.0" centerY="50.0" fill="TRANSPARENT" radiusX="50.0" radiusY="50.0"
+                         stroke="#0026ff" strokeType="INSIDE" strokeWidth="3.0"/>
             </children>
         </Pane>
-      <Pane fx:id="starPane" layoutX="12.0" layoutY="12.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="100.0" visible="false">
-         <children>
-            <Line endX="40.0" endY="35.0" startX="50.0" stroke="#a8ae26" strokeWidth="3.0" />
-            <Line endX="60.0" endY="35.0" startX="50.0" stroke="#a8ae26" strokeWidth="3.0" />
-            <Line endX="60.0" endY="35.0" startX="100.0" startY="35.0" stroke="#a8ae26" strokeWidth="3.0" />
-            <Line endX="68.0" endY="62.0" startX="100.0" startY="35.0" stroke="#a8ae26" strokeWidth="3.0" />
-            <Line endX="50.0" endY="75.0" startX="80.0" startY="100.0" stroke="#a8ae26" strokeWidth="3.0" />
-            <Line endX="68.0" endY="62.0" startX="80.0" startY="100.0" stroke="#a8ae26" strokeWidth="3.0" />
-            <Line endX="50.0" endY="75.0" startX="20.0" startY="100.0" stroke="#a8ae26" strokeWidth="3.0" />
-            <Line endX="32.0" endY="62.0" startX="20.0" startY="100.0" stroke="#a8ae26" strokeWidth="3.0" />
-            <Line endX="40.0" endY="35.0" startY="35.0" stroke="#a8ae26" strokeWidth="3.0" />
-            <Line endX="32.0" endY="62.0" startY="35.0" stroke="#a8ae26" strokeWidth="3.0" />
-         </children></Pane>
-      <Pane fx:id="trianglePane" layoutX="12.0" layoutY="12.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="100.0" visible="false">
-         <children>
-            <Polygon fx:id="triangle" fill="TRANSPARENT" layoutX="50.0" layoutY="60.0" stroke="#17a368" strokeType="INSIDE" strokeWidth="3.0">
-              <points>
-                <Double fx:value="-50.0" />
-                <Double fx:value="40.0" />
-                <Double fx:value="50.0" />
-                <Double fx:value="40.0" />
-                <Double fx:value="0.0" />
-                <Double fx:value="-60.0" />
-              </points>
-            </Polygon>
-         </children>
-      </Pane>
-        <Pane fx:id="emptyPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="100.0" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" />
+        <Pane fx:id="starPane" layoutX="12.0" layoutY="12.0" maxHeight="1.7976931348623157E308"
+              maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="100.0"
+              visible="false">
+            <children>
+                <Polygon fx:id="star" fill="TRANSPARENT" layoutX="50.0" layoutY="60.0" stroke="#a8ad26"
+                         strokeType="INSIDE">
+                    <points>
+                        <Double fx:value="0.0"/>
+                        <Double fx:value="-60.0"/>
+                        <Double fx:value="-10.0"/>
+                        <Double fx:value="-25.0"/>
+                        <Double fx:value="-50.0"/>
+                        <Double fx:value="-25.0"/>
+                        <Double fx:value="-18.0"/>
+                        <Double fx:value="2.0"/>
+                        <Double fx:value="-30.0"/>
+                        <Double fx:value="40.0"/>
+                        <Double fx:value="0.0"/>
+                        <Double fx:value="15.0"/>
+                        <Double fx:value="30.0"/>
+                        <Double fx:value="40.0"/>
+                        <Double fx:value="18.0"/>
+                        <Double fx:value="2.0"/>
+                        <Double fx:value="50.0"/>
+                        <Double fx:value="-25.0"/>
+                        <Double fx:value="10.0"/>
+                        <Double fx:value="-25.0"/>
+                    </points>
+                </Polygon>
+            </children>
+        </Pane>
+        <Pane fx:id="trianglePane" layoutX="12.0" layoutY="12.0" maxHeight="1.7976931348623157E308"
+              maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="100.0"
+              visible="false">
+            <children>
+                <Polygon fx:id="triangle" fill="TRANSPARENT" layoutX="50.0" layoutY="60.0" stroke="#17a368"
+                         strokeType="INSIDE" strokeWidth="3.0">
+                    <points>
+                        <Double fx:value="-50.0"/>
+                        <Double fx:value="40.0"/>
+                        <Double fx:value="50.0"/>
+                        <Double fx:value="40.0"/>
+                        <Double fx:value="0.0"/>
+                        <Double fx:value="-60.0"/>
+                    </points>
+                </Polygon>
+            </children>
+        </Pane>
+        <Pane fx:id="diamondPane" layoutX="12.0" layoutY="12.0" maxHeight="1.7976931348623157E308"
+              maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="100.0"
+              visible="false">
+            <children>
+                <Polygon fx:id="diamond" fill="TRANSPARENT" layoutX="50.0" layoutY="60.0" stroke="#1ec7e1"
+                         strokeType="INSIDE" strokeWidth="3.0">
+                    <points>
+                        <Double fx:value="-25.0"/>
+                        <Double fx:value="-60.0"/>
+                        <Double fx:value="-50.0"/>
+                        <Double fx:value="-30.0"/>
+                        <Double fx:value="0.0"/>
+                        <Double fx:value="40.0"/>
+                        <Double fx:value="50.0"/>
+                        <Double fx:value="-30.0"/>
+                        <Double fx:value="25.0"/>
+                        <Double fx:value="-60.0"/>
+                    </points>
+                </Polygon>
+            </children>
+        </Pane>
+        <Pane fx:id="pentagonPane" layoutX="12.0" layoutY="12.0" maxHeight="1.7976931348623157E308"
+              maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="100.0"
+              visible="false">
+            <children>
+                <Polygon fx:id="pentagon" fill="TRANSPARENT" layoutX="50.0" layoutY="60.0" stroke="#811fe0"
+                         strokeType="INSIDE" strokeWidth="3.0">
+                    <points>
+                        <Double fx:value="0"/>
+                        <Double fx:value="-60.0"/>
+                        <Double fx:value="-50.0"/>
+                        <Double fx:value="-18.0"/>
+                        <Double fx:value="-30.0"/>
+                        <Double fx:value="40.0"/>
+                        <Double fx:value="30.0"/>
+                        <Double fx:value="40.0"/>
+                        <Double fx:value="50"/>
+                        <Double fx:value="-18.0"/>
+                    </points>
+                </Polygon>
+            </children>
+        </Pane>
+        <Pane fx:id="emptyPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0"
+              prefHeight="100.0" prefWidth="100.0" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
     </children>
     <opaqueInsets>
-        <Insets />
+        <Insets/>
     </opaqueInsets>
 </GridPane>

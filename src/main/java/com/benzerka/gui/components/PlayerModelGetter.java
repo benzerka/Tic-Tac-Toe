@@ -2,8 +2,10 @@ package com.benzerka.gui.components;
 
 import com.benzerka.logic.TileState;
 import com.benzerka.logic.Turn;
+import lombok.Getter;
+import lombok.Setter;
 
-
+@Getter
 public class PlayerModelGetter {
     private TileState firstPlayer;
 
@@ -18,20 +20,12 @@ public class PlayerModelGetter {
         firstPlayer = tileState;
     }
 
-    public TileState getFirstPlayer() {
-        return firstPlayer;
-    }
-
     public void setTileStateForSecondPlayer(TileState tileState) {
         secondPlayer = tileState;
     }
 
     public void setTileStateMultiplayer(TileState tileState) {
-        secondPlayer = tileState;
-    }
-
-    public TileState getSecondPlayer() {
-        return secondPlayer;
+        multiplayer = tileState;
     }
 
     public TileState getPlayerModel(Turn currentTurn) {
