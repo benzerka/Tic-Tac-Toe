@@ -163,4 +163,8 @@ public class OptionsWindow extends GridPane {
         mainScreen.getChildren().setAll(mainScreenMenu);
     }
 
+    public String getMultiplayerNickname() {
+        return multiplayerTextField.getText();
+    }
+
 }

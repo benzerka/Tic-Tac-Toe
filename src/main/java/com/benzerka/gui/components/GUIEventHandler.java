@@ -23,36 +23,44 @@ public class GUIEventHandler {
 
     public GUIEventHandler(GridPane mainScreen, VBox mainScreenMenu) {
         playerModelGetter = new PlayerModelGetter();
-        multiplayerWindow = new MultiplayerWindow(mainScreen, mainScreenMenu);
+        multiplayerWindow = new MultiplayerWindow(mainScreen, mainScreenMenu, playerModelGetter);
         optionsWindow = new OptionsWindow(mainScreen, mainScreenMenu, playerModelGetter);
         singleplayerMenuWindow = new SingleplayerMenuWindow(mainScreen, mainScreenMenu, this, playerModelGetter);
-        multiplayerMenuWindow = new MultiplayerMenuWindow(mainScreen, mainScreenMenu, multiplayerWindow);
+        multiplayerMenuWindow = new MultiplayerMenuWindow(mainScreen, mainScreenMenu, this, multiplayerWindow, optionsWindow);
     }
 
-    public void getSingleplayerWindow(SingleplayerWindow singleplayerWindow) {
-        this.singleplayerWindow = singleplayerWindow;
+    public void setPlayableWindow(PlayableWindow window, boolean isMultiplayer) {
+        if (isMultiplayer) {
+            this.multiplayerWindow = (MultiplayerWindow)window;
+        } else {
+            this.singleplayerWindow = (SingleplayerWindow)window;
+        }
     }
 
-    private void addMultiplayerListeners() {
-        // MULTIPLAYER
-        // in case of a tie
+    public void addPlayableListener(boolean isMultiplayer) {
+        if (isMultiplayer) {
+            // MULTIPLAYER
+            // in case of a tie
+            multiplayerWindow.getGameLogic().addTieListener(() -> {
+                handleTie(multiplayerWindow);
+            });
+            // in case of a win
+            multiplayerWindow.getGameLogic().addWinListener((startX, endX, startY, endY, type) -> {
+                handleWin(multiplayerWindow, startX, endX, startY, endY, type);
+            });
+            // in case of a lose
 
-        // in case of a win
-
-        // in case of a lose
-
-    }
-
-    public void addSingleplayerListeners() {
-        // SINGLEPLAYER
-        // in case of a tie
-        singleplayerWindow.getGameLogic().addTieListener(() -> {
-            handleTie(singleplayerWindow);
-        });
-        // in case of a win
-        singleplayerWindow.getGameLogic().addWinListener((startX, endX, startY, endY, type) -> {
-            handleWin(singleplayerWindow, startX, endX, startY, endY, type);
-        });
+        } else {
+            // SINGLEPLAYER
+            // in case of a tie
+            singleplayerWindow.getGameLogic().addTieListener(() -> {
+                handleTie(singleplayerWindow);
+            });
+            // in case of a win
+            singleplayerWindow.getGameLogic().addWinListener((startX, endX, startY, endY, type) -> {
+                handleWin(singleplayerWindow, startX, endX, startY, endY, type);
+            });
+        }
     }
 
     private void handleWin(PlayableWindow window, int startX, int endX, int startY, int endY, WinConditionType type) {

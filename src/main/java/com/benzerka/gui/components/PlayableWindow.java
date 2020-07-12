@@ -9,4 +9,5 @@ public interface PlayableWindow {
     GridPane getGameBoard();
     GridPane getMainScreen();
     VBox getMainScreenMenu();
+    void initializeGame(int x, int y, int winCondition);
 }

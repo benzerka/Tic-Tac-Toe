@@ -27,10 +27,6 @@ public class SingleplayerWindow extends GridPane implements PlayableWindow {
     @FXML
     public Label errorLabel;
 
-//    public GameLogic getGameLogic() {
-//        return gameLogic;
-//    }
-
     private GameLogic gameLogic;
 
     private GridPane mainScreen;
@@ -39,6 +35,7 @@ public class SingleplayerWindow extends GridPane implements PlayableWindow {
 
     private PlayerModelGetter playerModelGetter;
 
+    @Override
     public void initializeGame(int boardXSize, int boardYSize, int winningConditionSize) {
         gameLogic = new GameLogic(boardXSize, boardYSize, winningConditionSize);
         player.textProperty().bind(gameLogic.getCurrentPlayerProperty().asString());
