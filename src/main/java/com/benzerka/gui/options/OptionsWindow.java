@@ -13,6 +13,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,6 +29,9 @@ public class OptionsWindow extends GridPane {
     private TileState possiblePlayerTwoTileState;
     private boolean isPlayerOneFlaggedForChange;
     private boolean isPlayerTwoFlaggedForChange;
+    @Getter
+    @Setter
+    private String clientNickname;
 
     @FXML
     private ComboBox<TileState> comboBoxPlayer1;
@@ -88,9 +93,12 @@ public class OptionsWindow extends GridPane {
 
     private void modifyComboBoxes() {
         ObservableList<TileState> comboBoxItems = getObservableListOfPictures();
-        configureComboBoxes(comboBoxPlayer1, comboBoxItems, StartingElement.CIRCLE);
-        configureComboBoxes(comboBoxMultiplayer, comboBoxItems, StartingElement.CIRCLE);
-        configureComboBoxes(comboBoxPlayer2, comboBoxItems, StartingElement.CROSS);
+        configureComboBoxes(comboBoxPlayer1, comboBoxItems, StartingElement.CIRCLE//, false
+                );
+        configureComboBoxes(comboBoxPlayer2, comboBoxItems, StartingElement.CROSS//, false
+                );
+        configureComboBoxes(comboBoxMultiplayer, comboBoxItems, StartingElement.CIRCLE///, true
+                );
         comboBoxPlayer1.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == comboBoxPlayer2.getValue()) {
                 singleplayerErrorLabel.setVisible(true);
@@ -120,8 +128,12 @@ public class OptionsWindow extends GridPane {
             }
         });
         comboBoxMultiplayer.valueProperty().addListener((observable, oldValue, newValue) -> {
-            playerModelGetter.setTileStateMultiplayer(newValue);
+            playerModelGetter.setTileStateMultiplayerHost(newValue);
         });
+    }
+
+    public void setMultiplayerClientModelInPlayerModelGetterClass(TileState model) {
+        playerModelGetter.setTileStateMultiplayerClient(model);
     }
 
     private ObservableList<TileState> getObservableListOfPictures() {
@@ -135,21 +147,30 @@ public class OptionsWindow extends GridPane {
         return FXCollections.observableList(comboBoxItemsList);
     }
 
-    private void configureComboBoxes(ComboBox<TileState> comboBox, ObservableList<TileState> comboBoxItems, StartingElement startingElement) {
+    private void configureComboBoxes(ComboBox<TileState> comboBox, ObservableList<TileState> comboBoxItems, StartingElement startingElement//, boolean isMultiplayer
+                ) {
         int elementAndPlayerIndex = (startingElement == StartingElement.CIRCLE) ? 0 : 1;
         comboBox.setItems(comboBoxItems);
         comboBox.setValue(comboBoxItems.get(elementAndPlayerIndex));
         comboBox.setCellFactory(new ElementsListCellFactory());
         comboBox.setButtonCell(new ElementsListCell());
-        setTileStateIfPlayerModelGetterFieldsAreNull(comboBox, elementAndPlayerIndex);
+        setTileStateIfPlayerModelGetterFieldsAreNull(comboBox, elementAndPlayerIndex//, isMultiplayer
+                            );
     }
 
-    private void setTileStateIfPlayerModelGetterFieldsAreNull(ComboBox<TileState> comboBox, int player) {
+    private void setTileStateIfPlayerModelGetterFieldsAreNull(ComboBox<TileState> comboBox, int player//, boolean
+                                                              ) {
         switch (player) {
             case 0:
-                if (Objects.isNull(playerModelGetter.getFirstPlayer())) {
-                    playerModelGetter.setTileStateForFirstPlayer(comboBox.getValue());
-                }
+//                if (isMultiplayer) {
+//                    if (Objects.isNull(playerModelGetter.getFirstPlayerMultiplayerHost())) {
+//                        playerModelGetter.setTileStateMultiplayerHost(comboBox.getValue());
+//                    }
+//                } else {
+                    if (Objects.isNull(playerModelGetter.getFirstPlayer())) {
+                        playerModelGetter.setTileStateForFirstPlayer(comboBox.getValue());
+                    }
+                //}
                 break;
             case 1:
                 if (Objects.isNull(playerModelGetter.getSecondPlayer())) {
@@ -163,8 +184,13 @@ public class OptionsWindow extends GridPane {
         mainScreen.getChildren().setAll(mainScreenMenu);
     }
 
-    public String getMultiplayerNickname() {
+    //
+    public String getMultiplayerHostName() {
         return multiplayerTextField.getText();
     }
 
+    //
+    public TileState getMultiplayerPlayerModel() {
+        return comboBoxMultiplayer.getValue();
+    }
 }

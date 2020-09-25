@@ -26,6 +26,9 @@ public class GameLogic {
     private List<TieListener> tieListeners = new ArrayList<>();
     private List<WinListener> winListeners = new ArrayList<>();
     private String winner;
+    //private String hostNickname;
+    //private String clientNickname;
+    //private boolean isMultiplayer = false;
 
     @SuppressWarnings("unchecked")
     public GameLogic(int boardXSize, int boardYSize, int winningConditionSize) {
@@ -85,7 +88,8 @@ public class GameLogic {
     }
 
     private void handleWin(int startX, int endX, int startY, int endY, WinConditionType type) {
-        setWinner();
+        setWinner(//isMultiplayer
+                );
         this.winListeners.forEach((winListener) -> {
             winListener.handleWin(startX, endX, startY, endY, type);
         });
@@ -223,13 +227,35 @@ public class GameLogic {
         errorProperty.set(error);
     }
 
-    private void setWinner() {
+//    public void setMultiplayerHostNickname(String hostNickname) {
+//        this.hostNickname = hostNickname;
+//    }
+//
+//    public void setMultiplayerClientNickname(String clientNickname) {
+//        this.clientNickname = clientNickname;
+//    }
+//
+//    public void setMultiplayerFlagOn() {
+//        isMultiplayer = true;
+//    }
+
+    private void setWinner(//boolean isMultiplayer
+                           ) {
         switch (currentPlayerProperty.get()) {
             case PLAYER1:
-                winner = "Player 1";
+//                if (isMultiplayer) {
+//                    // TODO: jak dam mozliwosc hostowi wybierania kto pierwszy zaczyna, zapewne uzywajac ternary expression i dodatkowej flagi bede mogl ustawiac odpowiednio winnera
+//                    winner = hostNickname;
+//                } else {
+                    winner = "Player 1";
+                //}
                 break;
             case PLAYER2:
-                winner = "Player 2";
+//                if (isMultiplayer) {
+//                    winner = clientNickname;
+//                } else {
+                    winner = "Player 2";
+               //}
                 break;
         }
     }

@@ -1,11 +1,10 @@
 package com.benzerka.gui.multiplayer;
 
 import com.benzerka.gui.components.GUIEventHandler;
-import com.benzerka.gui.components.PlayerModelGetter;
-import com.benzerka.gui.components.alerts.AlertCreator;
 import com.benzerka.gui.options.OptionsWindow;
-import com.benzerka.logic.MultiplayerClientThread;
-import com.benzerka.logic.MultiplayerServerThread;
+import com.benzerka.logic.client.MultiplayerClientThread;
+import com.benzerka.logic.server.MultiplayerServerThread;
+//import com.benzerka.logic.TileState;
 import com.benzerka.logic.ValidateCustomSettings;
 import com.benzerka.logic.ValidateIPAddress;
 import com.benzerka.logic.ValidateTextField;
@@ -16,7 +15,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -24,16 +22,15 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class MultiplayerMenuWindow extends GridPane implements Initializable {
+    private OptionsWindow optionsWindow;
     private GridPane mainScreen;
     private VBox mainScreenMenu;
-    private OptionsWindow optionsWindow;
     private MultiplayerWindow multiplayerWindow;
     private MultiplayerServerThread serverThread;
     private MultiplayerClientThread clientThread;
@@ -85,6 +82,8 @@ public class MultiplayerMenuWindow extends GridPane implements Initializable {
 
     @FXML
     private Label errorLabel;
+//    private TileState clientModel;
+//    private String clientNickname;
 
     public MultiplayerMenuWindow(GridPane mainScreen, VBox mainScreenMenu, GUIEventHandler guiEventHandler, MultiplayerWindow multiplayerWindow, OptionsWindow optionsWindow) {
         this.mainScreen = mainScreen;
@@ -97,21 +96,27 @@ public class MultiplayerMenuWindow extends GridPane implements Initializable {
             loader.setRoot(this);
             loader.setController(this);
             loader.load();
-            modifyChoiceBox();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void modifyChoiceBox() {
-        choiceBox.getItems().add(0, "Tic-Tac-Toe");
-        choiceBox.getItems().add(1, "Gomoku");
-        choiceBox.getItems().add(2, "Custom");
-        choiceBox.getSelectionModel().select(0);
-    }
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        choiceBoxInit();
+        validateIPAddress = new ValidateIPAddress();
+        infoLabel.getStyleClass().add("error-label");
+        errorLabel.getStyleClass().add("error-label");
+        joinGameErrorLabel.getStyleClass().add("error-label");
+        connectButton.disableProperty().bind(checkRegex(ipField).or(getPortFieldRange().not()));
+        onClientBoundAction = successfulConnection();
+        validateTextField = new ValidateTextField(portField);
+        portField.textProperty().addListener((observable, oldValue, newValue) -> {
+            validateTextField.replaceLettersToNumbers(newValue);
+        });
+    }
+
+    private void choiceBoxInit() {
         validateCustomSettings = new ValidateCustomSettings(boardXSizeTextField, boardYSizeTextField, winningConditionTextField, errorLabel, choiceBox, true);
         choiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             errorLabel.setVisible(false);
@@ -126,22 +131,9 @@ public class MultiplayerMenuWindow extends GridPane implements Initializable {
         winningConditionTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             validateCustomSettings.processNewValue(winningConditionTextField, newValue);
         });
-
-
-        validateIPAddress = new ValidateIPAddress();
-        infoLabel.getStyleClass().add("error-label");
-        errorLabel.getStyleClass().add("error-label");
-        joinGameErrorLabel.getStyleClass().add("error-label");
-        connectButton.disableProperty().bind(checkRegex(ipField).or(getPortFieldRange().not()));
-        onClientBoundAction = getRunnable();
-        //serverThread = new MultiplayerServerThread(ipLabel, portLabel, onClientBoundAction);
-        validateTextField = new ValidateTextField(portField);
-        portField.textProperty().addListener((observable, oldValue, newValue) -> {
-            validateTextField.replaceLettersToNumbers(newValue);
-        });
     }
 
-    private Runnable getRunnable() {
+    private Runnable successfulConnection() {
         return () -> {
             if (serverThread.getMultiplayerServer().getClientSocket().isBound()) {
                 Platform.runLater(() -> {
@@ -165,43 +157,68 @@ public class MultiplayerMenuWindow extends GridPane implements Initializable {
     }
 
     public void startGame(ActionEvent actionEvent) {
+
+        // TODO: CLIENT SIDED SECTIONS SHOULD BE DISABLED!
         startGameButton.setDisable(true);
         configureErrorLabel(infoLabel, false, "Waiting for someone to connect.", "#b90c0c");
         ipLabel.setText("");
         portLabel.setText("");
-        // telling client that startGame button was clicked, so the window on client's side can change.
+            // telling client that startGame button was clicked, so the window on client's side can change.
         serverThread.getMultiplayerServer().sendInstructionsToClient("startGame");
-        // However, we also have to tell the Client the board size and winning condition, also host's name
-        // and we initialize the game with given sizes
+            // However, we also have to tell the Client the board size and winning condition, also host's name
+            // and we initialize the game with given sizes
+        validateCustomSettings.setMultiplayerHostModel(optionsWindow.getMultiplayerPlayerModel()); // send host's player model to the client
+            // we have to get client's player model and name
+        serverThread.getMultiplayerServer().sendInstructionsToClient("getNickname");
+        serverThread.getMultiplayerServer().sendInstructionsToClient("getOptionsPlayerModel");
+            // we send THIS if host wants to DISCONNECT (wants to return to main screen, exists the game)
+            //serverThread.getMultiplayerServer().sendInstructionsToClient("disconnect");
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        multiplayerWindow.setMultiplayerNickname(optionsWindow.getMultiplayerHostName(), true);
+        multiplayerWindow.setMultiplayerNickname(optionsWindow.getClientNickname(), false);
         if (validateCustomSettings.startGame(multiplayerWindow, choiceBox)) {
-            // start game cancelled
+                // start game cancelled
         } else {
-            // successfully started the game
+                // successfully started the game
+
+            //multiplayerWindow.setMultiplayerNicknameInGameLogic();
             guiEventHandler.setPlayableWindow(multiplayerWindow, true);
             guiEventHandler.addPlayableListener(true);
             mainScreen.getChildren().setAll(multiplayerWindow);
             validateCustomSettings.clearTextFieldValues();
         }
+
     }
-
-    public void goBack(ActionEvent actionEvent) {
+        public void goBack(ActionEvent actionEvent) {
         mainScreen.getChildren().setAll(mainScreenMenu);
-
     }
 
     public void hostGame(ActionEvent actionEvent) {
-        // check PortField, get the textfieldcheck into separate class and custom settings as well
+        //handleUserInput.hostGame();
+
+            // check PortField, get the textfieldcheck into separate class and custom settings as well
         infoLabel.setVisible(true);
-        // we have to close previous server if it somehow still exists
+            // we have to close previous server if it somehow still exists
         if (Objects.nonNull(mainServerThread)) {
             serverThread.getMultiplayerServer().stopServer();
+            // TODO: stop server after finishing the game
         }
-        serverThread = new MultiplayerServerThread(ipLabel, portLabel, onClientBoundAction);
+        serverThread = new MultiplayerServerThread(ipLabel, portLabel, onClientBoundAction, optionsWindow);
+        multiplayerWindow.setServerToPlayerModelGetter(serverThread.getMultiplayerServer());
+        validateCustomSettings.setServerThread(serverThread);
         mainServerThread = new Thread(serverThread);
         mainServerThread.start();
+
     }
 
+        // CLIENT SIDE
     public void clientJoin(ActionEvent actionEvent) {
+        //handleUserInput.clientJoin();
+
         joinGameErrorLabel.setVisible(false);
         Runnable didNotConnect = new Runnable() {
             @Override
@@ -224,13 +241,11 @@ public class MultiplayerMenuWindow extends GridPane implements Initializable {
             public void run() {
                 Platform.runLater(() -> {
                     configureErrorLabel(joinGameErrorLabel, false, "Could not connect to the server.", "#b90c0c");
-                    // initialize the game according to server's sent sizes
-                    multiplayerWindow.initializeGame(3, 3, 3);
                     mainScreen.getChildren().setAll(multiplayerWindow);
                 });
             }
         };
-        clientThread = new MultiplayerClientThread(ipField.getText(), Integer.valueOf(portField.getText()), didConnect, didNotConnect, changeClientWindow);
+        clientThread = new MultiplayerClientThread(ipField.getText(), Integer.valueOf(portField.getText()), didConnect, didNotConnect, changeClientWindow, optionsWindow, multiplayerWindow);
         Thread thread = new Thread(clientThread);
         thread.start();
     }

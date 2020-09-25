@@ -61,7 +61,8 @@ public class SingleplayerWindow extends GridPane implements PlayableWindow {
     private void createTiles(ObjectProperty<TileState>[][] gameBoard, int boardXSize, int boardYSize) {
         for (int i = 0; i < boardYSize; i++) {
             for (int j = 0; j < boardXSize; j++) {
-                Tile tile = new Tile(gameBoard[i][j], gameLogic, playerModelGetter);
+                Tile tile = new Tile(gameBoard[i][j], gameLogic, playerModelGetter//, false
+                        );
                 tile.sendPosition(j, i);
                 this.gameBoard.add(tile, j, i);
             }

@@ -32,7 +32,9 @@ public class Tile extends GridPane {
         currentYPosition = y;
     }
 
-    public Tile(ObjectProperty<TileState> tileState, GameLogic gameLogic, PlayerModelGetter playerModelGetter) {
+    public Tile(ObjectProperty<TileState> tileState, GameLogic gameLogic, PlayerModelGetter playerModelGetter
+                //, boolean isMultiplayer
+                ) {
         super();
         this.tileState = new SimpleObjectProperty<>();
         this.tileState.bindBidirectional(tileState);
@@ -71,7 +73,8 @@ public class Tile extends GridPane {
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("TileRoot.fxml"));
-            tileController = new TileController(gameLogic, playerModelGetter);
+            tileController = new TileController(gameLogic, playerModelGetter//, isMultiplayer
+                    );
             loader.setController(tileController);
             Node node = loader.load();
             this.getChildren().add(node);

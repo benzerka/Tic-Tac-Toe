@@ -7,6 +7,7 @@ import com.benzerka.gui.multiplayer.MultiplayerWindow;
 import com.benzerka.gui.options.OptionsWindow;
 import com.benzerka.gui.singleplayer.SingleplayerMenuWindow;
 import com.benzerka.gui.singleplayer.SingleplayerWindow;
+//import com.benzerka.logic.MultiplayerVariablesHandler;
 import com.benzerka.logic.WinConditionType;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
@@ -19,12 +20,14 @@ public class GUIEventHandler {
     private MultiplayerWindow multiplayerWindow;
     private MultiplayerMenuWindow multiplayerMenuWindow;
     private OptionsWindow optionsWindow;
+    //private MultiplayerVariablesHandler multiplayerVariablesHandler;
     private PlayerModelGetter playerModelGetter;
 
     public GUIEventHandler(GridPane mainScreen, VBox mainScreenMenu) {
         playerModelGetter = new PlayerModelGetter();
         multiplayerWindow = new MultiplayerWindow(mainScreen, mainScreenMenu, playerModelGetter);
         optionsWindow = new OptionsWindow(mainScreen, mainScreenMenu, playerModelGetter);
+        //multiplayerVariablesHandler = new MultiplayerVariablesHandler(optionsWindow, multiplayerWindow);
         singleplayerMenuWindow = new SingleplayerMenuWindow(mainScreen, mainScreenMenu, this, playerModelGetter);
         multiplayerMenuWindow = new MultiplayerMenuWindow(mainScreen, mainScreenMenu, this, multiplayerWindow, optionsWindow);
     }

@@ -63,11 +63,14 @@ public class TileController implements Initializable {
     private GameLogic gameLogic;
 
     private PlayerModelGetter playerModelGetter;
+    //private boolean isMultiplayer;
 
 
-    public TileController(GameLogic gameLogic, PlayerModelGetter playerModelGetter) {
+    public TileController(GameLogic gameLogic, PlayerModelGetter playerModelGetter//, boolean isMultiplayer
+                          ) {
         this.gameLogic = gameLogic;
         this.playerModelGetter = playerModelGetter;
+        //this.isMultiplayer = isMultiplayer;
     }
 
     public void bindShapes() {
@@ -126,13 +129,29 @@ public class TileController implements Initializable {
 
     public void onClick(MouseEvent mouseEvent) {
         Turn currentTurn = gameLogic.getCurrentPlayerProperty().get();
-        TileState playerModel = receivePlayerModel(currentTurn);
+        TileState playerModel = null;
+//        if (isMultiplayer) {
+//            playerModel = receivePlayerModelMultiplayer(currentTurn);
+//            if (currentTurn == Turn.PLAYER1) { // host
+//                // send to client applyChanges?
+//                playerModelGetter.getMultiplayerServer().sendInstructionsToClient("applyChanges");
+//            } else { // client
+//
+//
+//            }
+//        } else {
+            playerModel = receivePlayerModel(currentTurn);
+        //}
         applyChanges(playerModel);
     }
 
     private TileState receivePlayerModel(Turn currentTurn) {
         return playerModelGetter.getPlayerModel(currentTurn);
     }
+
+//    private TileState receivePlayerModelMultiplayer(Turn currentTurn) {
+//        return playerModelGetter.getPlayerModelMultiplayer(currentTurn);
+//    }
 
     private void applyChanges(TileState currentTileState) {
         if (currentTile.getTileState() == TileState.EMPTY) {

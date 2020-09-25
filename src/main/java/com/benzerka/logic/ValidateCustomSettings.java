@@ -2,6 +2,7 @@ package com.benzerka.logic;
 
 import com.benzerka.gui.components.PlayableWindow;
 import com.benzerka.gui.components.alerts.AlertCreator;
+import com.benzerka.logic.server.MultiplayerServerThread;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -18,6 +19,8 @@ public class ValidateCustomSettings {
     private boolean isMultiplayer;
     private MultiplayerServerThread serverThread = null;
     private ChoiceBox<String> choiceBox;
+    //
+    private TileState hostModel;
 
     public ValidateCustomSettings(TextField boardXSizeTextField, TextField boardYSizeTextField, TextField winningConditionTextField, Label errorLabel, ChoiceBox<String> choiceBox, boolean isMultiplayer) {
         this.boardXSizeTextField = boardXSizeTextField;
@@ -36,7 +39,7 @@ public class ValidateCustomSettings {
         choiceBox.getSelectionModel().select(0);
     }
 
-    public void getServerThread(MultiplayerServerThread serverThread) {
+    public void setServerThread(MultiplayerServerThread serverThread) {
         this.serverThread = serverThread;
     }
 
@@ -111,12 +114,22 @@ public class ValidateCustomSettings {
         customSettings.setDisable(!newValue.equals("Custom"));
     }
 
+    //
+    public void setMultiplayerHostModel(TileState hostModel) {
+        this.hostModel = hostModel;
+    }
+
     public boolean startGame(PlayableWindow window, ChoiceBox<String> choiceBox) {
         switch (choiceBox.getValue()) {
             case "Tic-Tac-Toe":
                 if (isMultiplayer) {
                     if (Objects.nonNull(serverThread)) {
                         serverThread.getMultiplayerServer().sendInstructionsToClient("3,3,3");
+//                        sendHostsPlayerModelToTheClient();
+//                    } else {
+//                        // error!
+//                        System.out.println("Error! Server Thread does not exist or is a null.");
+//                        return true;
                     }
                 }
                 window.initializeGame(3, 3, 3);
@@ -125,6 +138,11 @@ public class ValidateCustomSettings {
                 if (isMultiplayer) {
                     if (Objects.nonNull(serverThread)) {
                         serverThread.getMultiplayerServer().sendInstructionsToClient("15,15,5");
+//                        sendHostsPlayerModelToTheClient();
+//                    } else {
+//                        // error!
+//                        System.out.println("Error! Server Thread does not exist or is a null.");
+//                        return true;
                     }
                 }
                 window.initializeGame(15, 15, 5);
@@ -134,6 +152,11 @@ public class ValidateCustomSettings {
                     if (isMultiplayer) {
                         if (Objects.nonNull(serverThread)) {
                             serverThread.getMultiplayerServer().sendInstructionsToClient(getXValue() + "," + getYValue() + "," + getWinningConditionValue());
+//                            sendHostsPlayerModelToTheClient();
+//                        } else {
+//                            // error!
+//                            System.out.println("Error! Server Thread does not exist or is a null.");
+//                            return true;
                         }
                     }
                     window.initializeGame(getXValue(), getYValue(), getWinningConditionValue());
@@ -146,6 +169,10 @@ public class ValidateCustomSettings {
         }
         return false;
     }
+
+//    private void sendHostsPlayerModelToTheClient() {
+//        serverThread.getMultiplayerServer().sendInstructionsToClient(hostModel.toString());
+//    }
 
     private boolean areValuesCorrect() {
         return (checkIfFieldMatchesRange(getXValue()) && checkIfFieldMatchesRange(getYValue()) && checkIfFieldMatchesRange(getWinningConditionValue()) && !checkIfWinningConditionIsLongerThanLongerSide());
